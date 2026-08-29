@@ -1,73 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ETC Weather Observation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-            margin: 0;
-        }
-        p {
-            color: #666;
-            margin-top: 10px;
-        }
-    </style>
-</head>```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ETC Weather Observation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-            margin: 0;
-        }
-        p {
-            color: #666;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>ETC Weather Observation</h1>
-        <p>Coming soon...</p>
-    </div>
-</body>
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#e9e7df" />
+    <meta
+      name="description"
+      content="一台受气象观测公报启发的沉浸式倒计时终端。"
+    />
+    <title>Temporal Observation / Next Update</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="paper-grain" aria-hidden="true"></div>
+
+    <main class="sheet">
+      <i class="registration registration--tl" aria-hidden="true"></i>
+      <i class="registration registration--tc" aria-hidden="true"></i>
+      <i class="registration registration--tr" aria-hidden="true"></i>
+      <i class="registration registration--bl" aria-hidden="true"></i>
+      <i class="registration registration--bc" aria-hidden="true"></i>
+      <i class="registration registration--br" aria-hidden="true"></i>
+
+      <section class="bulletin" aria-labelledby="countdown-title">
+        <header class="masthead">
+          <div>
+            <p class="eyebrow">T-00 / TEMPORAL OBSERVATION</p>
+            <h1 id="countdown-title">NEXT UPDATE BULLETIN</h1>
+          </div>
+          <button class="text-button" id="open-settings" type="button">
+            SET TARGET <span aria-hidden="true">↗</span>
+          </button>
+        </header>
+
+        <div class="rule rule--heavy" aria-hidden="true"></div>
+
+        <div class="metadata" aria-label="Countdown metadata">
+          <p>STATION: <strong>LOCAL</strong></p>
+          <p>PACKET: <strong id="packet-id">0001</strong></p>
+          <p>ISSUED: <strong id="issued-date">--/--/----</strong></p>
+          <p>STATUS: <strong id="status-label">ACTIVE</strong></p>
+        </div>
+
+        <section class="countdown-panel" aria-label="Countdown timer">
+          <p class="target-kicker">NEXT UPDATE IN</p>
+
+          <div class="timer" role="timer" aria-live="off">
+            <div class="time-unit time-unit--hours">
+              <span class="time-value" id="hours">00</span>
+              <span class="unit-label">HOURS</span>
+            </div>
+            <span class="separator" aria-hidden="true">:</span>
+            <div class="time-unit">
+              <span class="time-value" id="minutes">00</span>
+              <span class="unit-label">MINUTES</span>
+            </div>
+            <span class="separator" aria-hidden="true">:</span>
+            <div class="time-unit">
+              <span class="time-value" id="seconds">00</span>
+              <span class="unit-label">SECONDS</span>
+            </div>
+          </div>
+
+          <div class="target-line" aria-label="Target date">
+            <span class="target-line__label">TARGET</span>
+            <span class="target-line__value" id="target-display">--</span>
+          </div>
+        </section>
+
+        <footer class="footer-line">
+          <p>DATA FEED: LOCAL / SYNC: <span id="sync-state">NOMINAL</span></p>
+          <p>CHK: <span id="checksum">0000-0000</span></p>
+        </footer>
+      </section>
+
+      <p class="side-note" aria-hidden="true">ETC / OBSERVATION SERIES / 2026</p>
+    </main>
+
+    <dialog class="settings" id="settings-dialog">
+      <form class="settings__form" id="settings-form" method="dialog">
+        <div class="settings__header">
+          <div>
+            <p class="eyebrow">CONTROL SURFACE / LOCAL</p>
+            <h2>SET NEXT UPDATE</h2>
+          </div>
+          <button class="close-button" id="close-settings" type="button" aria-label="关闭设置">×</button>
+        </div>
+
+        <label>
+          <span>TARGET DATE &amp; TIME</span>
+          <input id="date-input" name="target" type="datetime-local" required />
+        </label>
+
+        <div class="settings__actions">
+          <button class="text-button" id="reset-settings" type="button">RESET DEFAULT</button>
+          <button class="primary-button" type="submit">APPLY TARGET</button>
+        </div>
+
+        <p class="settings__note">
+          Saved only in this browser. The default time lives at the top of <code>script.js</code>.
+        </p>
+      </form>
+    </dialog>
+
+    <noscript>This countdown needs JavaScript to run.</noscript>
+    <script type="module" src="./script.js"></script>
+  </body>
 </html>
