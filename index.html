@@ -28,9 +28,6 @@
             <p class="eyebrow">T-00 / TEMPORAL OBSERVATION</p>
             <h1 id="countdown-title">NEXT UPDATE BULLETIN</h1>
           </div>
-          <button class="text-button" id="open-settings" type="button">
-            SET TARGET <span aria-hidden="true">↗</span>
-          </button>
         </header>
 
         <div class="rule rule--heavy" aria-hidden="true"></div>
@@ -50,12 +47,10 @@
               <span class="time-value" id="hours">00</span>
               <span class="unit-label">HOURS</span>
             </div>
-            <span class="separator" aria-hidden="true">:</span>
             <div class="time-unit">
               <span class="time-value" id="minutes">00</span>
               <span class="unit-label">MINUTES</span>
             </div>
-            <span class="separator" aria-hidden="true">:</span>
             <div class="time-unit">
               <span class="time-value" id="seconds">00</span>
               <span class="unit-label">SECONDS</span>
@@ -68,6 +63,46 @@
           </div>
         </section>
 
+        <section class="email-capture" aria-labelledby="email-capture-title">
+          <div class="email-capture__intro">
+            <p class="eyebrow">CMU / CONTACT FEED</p>
+            <h2 id="email-capture-title">GET THE NEXT UPDATE</h2>
+          </div>
+
+          <form
+            class="email-form"
+            id="andrew-email-form"
+            action="https://formspree.io/f/xzebzavr"
+            method="post"
+            novalidate
+          >
+            <label for="andrew-username">ANDREW EMAIL</label>
+            <div class="email-form__entry">
+              <div class="email-address">
+                <input
+                  id="andrew-username"
+                  type="text"
+                  inputmode="email"
+                  autocomplete="username"
+                  autocapitalize="none"
+                  spellcheck="false"
+                  maxlength="64"
+                  pattern="[A-Za-z0-9._+-]+"
+                  aria-describedby="andrew-email-hint email-form-status"
+                  placeholder="abc123"
+                  required
+                />
+                <span class="email-domain">@andrew.cmu.edu</span>
+              </div>
+              <button class="submit-button" id="email-submit" type="submit">SUBMIT</button>
+            </div>
+            <p class="email-form__hint" id="andrew-email-hint">
+              Enter your Andrew ID only. The CMU domain is added automatically.
+            </p>
+            <p class="email-form__status" id="email-form-status" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
         <footer class="footer-line">
           <p>DATA FEED: LOCAL / SYNC: <span id="sync-state">NOMINAL</span></p>
           <p>CHK: <span id="checksum">0000-0000</span></p>
@@ -76,32 +111,6 @@
 
       <p class="side-note" aria-hidden="true">ETC / OBSERVATION SERIES / 2026</p>
     </main>
-
-    <dialog class="settings" id="settings-dialog">
-      <form class="settings__form" id="settings-form" method="dialog">
-        <div class="settings__header">
-          <div>
-            <p class="eyebrow">CONTROL SURFACE / LOCAL</p>
-            <h2>SET NEXT UPDATE</h2>
-          </div>
-          <button class="close-button" id="close-settings" type="button" aria-label="关闭设置">×</button>
-        </div>
-
-        <label>
-          <span>TARGET DATE &amp; TIME</span>
-          <input id="date-input" name="target" type="datetime-local" required />
-        </label>
-
-        <div class="settings__actions">
-          <button class="text-button" id="reset-settings" type="button">RESET DEFAULT</button>
-          <button class="primary-button" type="submit">APPLY TARGET</button>
-        </div>
-
-        <p class="settings__note">
-          Saved only in this browser. The default time lives at the top of <code>script.js</code>.
-        </p>
-      </form>
-    </dialog>
 
     <noscript>This countdown needs JavaScript to run.</noscript>
     <script type="module" src="./script.js"></script>

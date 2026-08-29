@@ -84,7 +84,7 @@ button {
 .target-line,
 .footer-line,
 .side-note,
-.settings label > span {
+.email-form label {
   letter-spacing: 0.04em;
 }
 
@@ -95,38 +95,13 @@ button {
 }
 
 .masthead {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2rem;
+  display: block;
 }
 
 .masthead h1 {
   margin: 0;
   font-size: clamp(1rem, 1.55vw, 1.75rem);
   font-weight: 500;
-}
-
-.text-button,
-.primary-button,
-.close-button {
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-.text-button {
-  padding: 0.4rem 0;
-  border-bottom: 1px solid currentColor;
-  font-size: 0.7rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  transition: opacity 180ms ease, gap 180ms ease;
-}
-
-.text-button:hover {
-  opacity: 0.55;
 }
 
 .rule {
@@ -156,6 +131,10 @@ button {
   text-align: right;
 }
 
+.metadata p:nth-child(3) {
+  padding-left: 1rem;
+}
+
 .metadata strong {
   font-weight: 500;
 }
@@ -170,8 +149,7 @@ button {
   overflow: hidden;
   background:
     linear-gradient(rgba(233, 231, 223, 0.88), rgba(233, 231, 223, 0.88)),
-    repeating-linear-gradient(0deg, transparent 0 49px, rgba(17, 18, 16, 0.07) 49px 50px),
-    repeating-linear-gradient(90deg, transparent 0 49px, rgba(17, 18, 16, 0.07) 49px 50px);
+    repeating-linear-gradient(0deg, transparent 0 49px, rgba(17, 18, 16, 0.07) 49px 50px);
 }
 
 .countdown-panel::before,
@@ -185,11 +163,11 @@ button {
 }
 
 .countdown-panel::before {
-  left: 25%;
+  left: 33.3333%;
 }
 
 .countdown-panel::after {
-  right: 25%;
+  right: 33.3333%;
 }
 
 .target-kicker {
@@ -204,15 +182,29 @@ button {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
   width: 100%;
   margin-top: clamp(4rem, 12vh, 8rem);
 }
 
 .time-unit {
+  position: relative;
   min-width: 0;
   text-align: center;
+}
+
+.time-unit:not(:last-child)::after {
+  position: absolute;
+  top: -0.08em;
+  left: 100%;
+  z-index: 2;
+  content: ':';
+  font-family: var(--sans);
+  font-size: clamp(3.5rem, 7vw, 7.8rem);
+  font-weight: 300;
+  line-height: 0.78;
+  transform: translateX(-50%);
 }
 
 .time-value {
@@ -231,14 +223,6 @@ button {
   opacity: 0.58;
   filter: blur(1.5px);
   transform: translateY(0.045em);
-}
-
-.separator {
-  margin-top: -0.08em;
-  font-family: var(--sans);
-  font-size: clamp(3.5rem, 7vw, 7.8rem);
-  font-weight: 300;
-  line-height: 0.78;
 }
 
 .unit-label {
@@ -331,100 +315,129 @@ button {
   box-shadow: 0 0 0 6px var(--paper), 0 0 0 7px var(--ink);
 }
 
-.settings {
-  width: min(92vw, 620px);
-  padding: 0;
-  border: 1px solid var(--ink);
-  border-radius: 0;
-  color: var(--ink);
-  background: var(--paper-bright);
-  box-shadow: 18px 18px 0 rgba(17, 18, 16, 0.24);
-}
-
-.settings::backdrop {
-  background: rgba(17, 18, 16, 0.58);
-  backdrop-filter: blur(3px);
-}
-
-.settings__form {
+.email-capture {
   display: grid;
-  gap: 1.6rem;
-  padding: clamp(1.5rem, 4vw, 3rem);
+  grid-template-columns: minmax(180px, 0.65fr) minmax(0, 1.6fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  padding: clamp(1.2rem, 2.4vw, 2rem) clamp(1rem, 3vw, 3rem);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-left: 1px solid var(--line);
 }
 
-.settings__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 2rem;
-  padding-bottom: 1.2rem;
-  border-bottom: 1px solid var(--ink);
-}
-
-.settings__header h2 {
+.email-capture__intro h2 {
   margin: 0;
-  font-size: clamp(1.15rem, 4vw, 1.65rem);
+  font-size: clamp(0.9rem, 1.1vw, 1.2rem);
   font-weight: 500;
+  letter-spacing: 0.06em;
 }
 
-.close-button {
-  padding: 0;
-  font-family: var(--sans);
-  font-size: 2rem;
-  font-weight: 300;
-  line-height: 0.8;
+.email-form {
+  min-width: 0;
 }
 
-.settings label {
+.email-form label {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-size: 0.62rem;
+}
+
+.email-form__entry {
   display: grid;
-  gap: 0.65rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.8rem;
+  align-items: stretch;
 }
 
-.settings label > span {
-  font-size: 0.65rem;
+.email-address {
+  display: flex;
+  min-width: 0;
+  min-height: 46px;
+  align-items: center;
+  border: 1px solid var(--ink);
+  background: rgba(255, 255, 255, 0.14);
+  transition: box-shadow 150ms ease;
 }
 
-.settings input {
-  width: 100%;
-  padding: 0.9rem 0;
+.email-address:focus-within {
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+}
+
+.email-address input {
+  min-width: 0;
+  flex: 1 1 auto;
+  padding: 0.78rem 0.35rem 0.78rem 0.8rem;
   border: 0;
-  border-bottom: 1px solid var(--ink);
-  border-radius: 0;
   outline: 0;
   color: var(--ink);
   background: transparent;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
-.settings input:focus {
-  box-shadow: 0 2px 0 var(--ink);
+.email-address input::placeholder {
+  color: rgba(17, 18, 16, 0.32);
 }
 
-.settings__actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.5rem;
+.email-address input[aria-invalid='true'] {
+  text-decoration: underline wavy currentColor;
+  text-underline-offset: 0.22em;
 }
 
-.primary-button {
-  padding: 0.85rem 1.1rem;
+.email-domain {
+  flex: 0 0 auto;
+  padding-right: 0.8rem;
+  color: var(--ink-soft);
+  font-size: clamp(0.68rem, 0.78vw, 0.85rem);
+  white-space: nowrap;
+}
+
+.submit-button {
+  min-width: 104px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
   color: var(--paper-bright);
   background: var(--ink);
-  font-size: 0.7rem;
-  letter-spacing: 0.07em;
+  cursor: pointer;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  transition: color 150ms ease, background 150ms ease;
 }
 
-.settings__note {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.62rem;
-  line-height: 1.6;
-}
-
-.settings__note code {
+.submit-button:hover:not(:disabled),
+.submit-button:focus-visible {
   color: var(--ink);
+  background: var(--paper-bright);
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.submit-button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.email-form__hint,
+.email-form__status {
+  margin: 0.5rem 0 0;
+  font-size: 0.58rem;
+  line-height: 1.45;
+}
+
+.email-form__hint {
+  color: var(--ink-soft);
+}
+
+.email-form__status {
+  min-height: 0.85rem;
+}
+
+.email-form__status.is-error {
+  color: #8b1e16;
+}
+
+.email-form__status.is-success {
+  color: #245f3d;
 }
 
 .is-expired .countdown-panel {
@@ -463,12 +476,11 @@ button {
   }
 
   .timer {
-    grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
   }
 
-  .separator {
-    display: block;
+  .time-unit:not(:last-child)::after {
     font-size: clamp(2.5rem, 9vw, 4.5rem);
   }
 
@@ -490,6 +502,11 @@ button {
   .registration--bc {
     display: none;
   }
+
+  .email-capture {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
 }
 
 @media (max-width: 520px) {
@@ -502,19 +519,6 @@ button {
   .bulletin {
     width: 92vw;
     margin: 3.25rem auto 2rem;
-  }
-
-  .masthead {
-    display: flex;
-    align-items: flex-end;
-    gap: 1rem;
-  }
-
-  .masthead .text-button {
-    min-height: 40px;
-    flex: 0 0 auto;
-    padding-top: 0.75rem;
-    font-size: 0.58rem;
   }
 
   .masthead h1 {
@@ -553,7 +557,7 @@ button {
   }
 
   .timer {
-    grid-template-columns: minmax(0, 1.45fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
   }
 
@@ -561,8 +565,13 @@ button {
     font-size: clamp(3rem, 14vw, 4.7rem);
   }
 
-  .separator {
-    margin-top: 0;
+  .time-unit--hours .time-value {
+    font-size: clamp(2.7rem, 12.5vw, 4.3rem);
+    letter-spacing: -0.1em;
+  }
+
+  .time-unit:not(:last-child)::after {
+    top: 0;
     font-size: clamp(2rem, 8vw, 3.2rem);
   }
 
@@ -619,14 +628,37 @@ button {
     display: none;
   }
 
-  .settings__actions {
-    align-items: stretch;
-    flex-direction: column-reverse;
+  .email-capture {
+    gap: 0.9rem;
+    padding: 1rem 0.75rem 1.1rem;
   }
 
-  .settings {
-    max-height: 90dvh;
-    overflow-y: auto;
+  .email-capture__intro h2 {
+    font-size: 0.82rem;
+  }
+
+  .email-form__entry {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .email-address {
+    min-height: 48px;
+  }
+
+  .email-address input {
+    padding-left: 0.65rem;
+    font-size: 0.82rem;
+  }
+
+  .email-domain {
+    padding-right: 0.65rem;
+    font-size: 0.62rem;
+  }
+
+  .submit-button {
+    min-height: 46px;
+    width: 100%;
   }
 }
 
