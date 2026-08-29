@@ -2,7 +2,7 @@
    COUNTDOWN CONFIGURATION — EDIT THIS ONE BLOCK TO CHANGE DEFAULTS
    ================================================================ */
 const COUNTDOWN_CONFIG = {
-  targetDate: '2026-12-31T23:59:59+08:00',
+  targetDate: '2026-08-31T23:59:59+08:00',
   locale: 'zh-CN',
   storageKey: 'next-update-settings-v2',
 };
