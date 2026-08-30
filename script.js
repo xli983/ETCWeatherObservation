@@ -127,21 +127,21 @@ function validateUsername(rawValue) {
   const username = rawValue.trim();
 
   if (!username) {
-    return { valid: false, message: '请输入 Andrew 邮箱用户名。' };
+    return { valid: false, message: 'Please enter your Andrew ID.' };
   }
   if (username.includes('@')) {
-    return { valid: false, message: '用户名中不能包含 @。' };
+    return { valid: false, message: 'Do not include @ in your Andrew ID.' };
   }
   if (!ALLOWED_USERNAME.test(username)) {
     return {
       valid: false,
-      message: '仅可使用英文字母、数字、句点、下划线、加号和连字符。',
+      message: 'Use only letters, numbers, periods, underscores, plus signs, and hyphens.',
     };
   }
   if (username.startsWith('.') || username.endsWith('.') || username.includes('..')) {
     return {
       valid: false,
-      message: '用户名不能以句点开头或结尾，也不能包含连续句点。',
+      message: 'Your Andrew ID cannot start or end with a period, or contain consecutive periods.',
     };
   }
 
@@ -152,7 +152,7 @@ elements.emailInput.addEventListener('beforeinput', (event) => {
   if (event.data?.includes('@')) {
     event.preventDefault();
     elements.emailInput.setAttribute('aria-invalid', 'true');
-    setFormStatus('用户名中不能包含 @。', 'error');
+    setFormStatus('Do not include @ in your Andrew ID.', 'error');
   }
 });
 
@@ -163,7 +163,7 @@ elements.emailInput.addEventListener('input', () => {
   if (sanitizedValue !== originalValue) {
     elements.emailInput.value = sanitizedValue;
     elements.emailInput.setAttribute('aria-invalid', 'true');
-    setFormStatus('仅可使用英文字母、数字、句点、下划线、加号和连字符。', 'error');
+    setFormStatus('Use only letters, numbers, periods, underscores, plus signs, and hyphens.', 'error');
     return;
   }
 
@@ -189,7 +189,7 @@ elements.emailForm.addEventListener('submit', async (event) => {
   elements.emailInput.value = validation.username;
   elements.emailInput.removeAttribute('aria-invalid');
   elements.emailSubmit.disabled = true;
-  elements.emailSubmit.textContent = '提交中…';
+  elements.emailSubmit.textContent = 'Submitting...';
   setFormStatus('');
 
   try {
@@ -202,9 +202,9 @@ elements.emailForm.addEventListener('submit', async (event) => {
     if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
 
     elements.emailInput.value = '';
-    setFormStatus('提交成功！我们已收到你的 Andrew 邮箱。', 'success');
+    setFormStatus('Success. We received your Andrew email.', 'success');
   } catch {
-    setFormStatus('提交失败，请稍后再试。', 'error');
+    setFormStatus('Submission failed. Please try again later.', 'error');
   } finally {
     elements.emailSubmit.disabled = false;
     elements.emailSubmit.textContent = 'SUBMIT';
