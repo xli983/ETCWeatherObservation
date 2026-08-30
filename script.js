@@ -2,7 +2,7 @@
    COUNTDOWN CONFIGURATION — SET THE TARGET DATE HERE
    ================================================================ */
 const COUNTDOWN_CONFIG = {
-  targetDate: '2026-08-31T23:59:59+08:00',
+  targetDate: '2026-09-02T08:00:00-04:00',
   locale: 'zh-CN',
 };
 
