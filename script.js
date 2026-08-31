@@ -186,8 +186,11 @@ function wireEmailForm(form, { onSuccess } = {}) {
     }
 
     const completeEmail = `${validation.username}${ANDREW_DOMAIN}`;
+    const submittedAt = new Date();
     const formData = new FormData();
     formData.append('email', completeEmail);
+    formData.append('submittedAt', submittedAt.toISOString());
+    formData.append('submittedLocal', submittedAt.toString());
 
     input.value = validation.username;
     input.removeAttribute('aria-invalid');
