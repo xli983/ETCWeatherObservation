@@ -333,3 +333,29 @@ archiveForm.addEventListener('submit', (event) => {
   archivePassword.focus();
   archiveForm.animate([{ transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 180 });
 });
+
+/* The rail follows the pointer subtly and introduces itself once per tab. */
+const observationRail = document.querySelector('.site-nav');
+if (observationRail) {
+  observationRail.addEventListener('pointermove', (event) => {
+    const bounds = observationRail.getBoundingClientRect();
+    observationRail.style.setProperty('--nav-y', `${event.clientY - bounds.top}px`);
+  });
+
+  observationRail.addEventListener('pointerleave', () => {
+    observationRail.style.setProperty('--nav-y', '50%');
+  });
+
+  if (!window.sessionStorage.getItem('etc-rail-seen') && window.matchMedia('(min-width: 821px)').matches) {
+    observationRail.classList.add('is-peeking');
+    window.setTimeout(() => observationRail.classList.remove('is-peeking'), 1450);
+    window.sessionStorage.setItem('etc-rail-seen', 'true');
+  }
+
+  observationRail.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      document.activeElement?.blur();
+      observationRail.classList.remove('is-peeking');
+    }
+  });
+}

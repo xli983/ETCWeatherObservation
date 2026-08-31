@@ -48,15 +48,33 @@
     <div class="paper-grain" aria-hidden="true"></div>
 
     <aside class="site-nav" aria-label="Observation sections">
-      <div class="site-nav__identity"><span class="site-nav__mark">ETC</span><span>WEATHER<br />OBSERVATION</span></div>
+      <div class="nav-scan" aria-hidden="true"></div>
+      <div class="site-nav__identity">
+        <span class="site-nav__mark">ETC</span>
+        <span class="site-nav__name">WEATHER<br />OBSERVATION</span>
+        <span class="site-nav__hint" aria-hidden="true">EXPAND&nbsp;›</span>
+      </div>
       <nav>
-        <button class="site-nav__item is-active" data-route="home" type="button"><span>01</span> HOME</button>
-        <button class="site-nav__item" data-route="archive" type="button"><span>02</span> ARCHIVE <b class="nav-lock">LOCK</b></button>
-        <button class="site-nav__item" data-route="station" type="button"><span>03</span> STATION</button>
-        <button class="site-nav__item" data-route="system-log" type="button"><span>04</span> SYSTEM LOG</button>
-        <button class="site-nav__item" data-route="about" type="button"><span>05</span> ABOUT</button>
+        <button class="site-nav__item is-active" data-route="home" data-label="HOME" type="button">
+          <span class="nav-index">01</span><span class="nav-icon" aria-hidden="true">⌂</span><span class="nav-label">HOME</span><span class="nav-arrow">↗</span>
+        </button>
+        <button class="site-nav__item" data-route="archive" data-label="ARCHIVE" type="button">
+          <span class="nav-index">02</span><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-label">ARCHIVE</span><b class="nav-lock">LOCK</b><span class="nav-arrow">↗</span>
+        </button>
+        <button class="site-nav__item" data-route="station" data-label="STATION" type="button">
+          <span class="nav-index">03</span><span class="nav-icon" aria-hidden="true">⌖</span><span class="nav-label">STATION</span><span class="nav-arrow">↗</span>
+        </button>
+        <button class="site-nav__item" data-route="system-log" data-label="SYSTEM LOG" type="button">
+          <span class="nav-index">04</span><span class="nav-icon" aria-hidden="true">_</span><span class="nav-label">SYSTEM LOG</span><span class="nav-arrow">↗</span>
+        </button>
+        <button class="site-nav__item" data-route="about" data-label="ABOUT" type="button">
+          <span class="nav-index">05</span><span class="nav-icon" aria-hidden="true">i</span><span class="nav-label">ABOUT</span><span class="nav-arrow">↗</span>
+        </button>
       </nav>
-      <p class="site-nav__status"><i></i> STATION ONLINE</p>
+      <div class="site-nav__footer">
+        <p class="site-nav__status"><i></i><span>STATION ONLINE</span></p>
+        <p class="site-nav__coord">40.4433°N<br />79.9436°W</p>
+      </div>
     </aside>
 
     <main class="sheet app-main">
