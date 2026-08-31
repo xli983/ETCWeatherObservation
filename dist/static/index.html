@@ -50,7 +50,7 @@
     <aside class="site-nav" aria-label="Observation sections">
       <div class="nav-scan" aria-hidden="true"></div>
       <div class="site-nav__identity">
-        <span class="site-nav__mark">ETC</span>
+        <span class="site-nav__mark"><img src="./fish_black.png" alt="" /><b>ETC</b></span>
         <span class="site-nav__name">WEATHER<br />OBSERVATION</span>
         <span class="site-nav__hint" aria-hidden="true">EXPAND&nbsp;›</span>
       </div>
@@ -59,7 +59,7 @@
           <span class="nav-index">01</span><span class="nav-icon" aria-hidden="true">⌂</span><span class="nav-label">HOME</span><span class="nav-arrow">↗</span>
         </button>
         <button class="site-nav__item" data-route="archive" data-label="ARCHIVE" type="button">
-          <span class="nav-index">02</span><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-label">ARCHIVE</span><b class="nav-lock">LOCK</b><span class="nav-arrow">↗</span>
+          <span class="nav-index">02</span><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-label">ARCHIVE</span><span class="nav-arrow">↗</span>
         </button>
         <button class="site-nav__item" data-route="station" data-label="STATION" type="button">
           <span class="nav-index">03</span><span class="nav-icon" aria-hidden="true">⌖</span><span class="nav-label">STATION</span><span class="nav-arrow">↗</span>
@@ -179,10 +179,9 @@
           <p class="gate-icon" aria-hidden="true">×</p>
           <p class="eyebrow">ENCRYPTED VOLUME / ETC-ARC-01</p>
           <h2>ACCESS CREDENTIAL REQUIRED</h2>
-          <p>Enter the five-character recovery phrase to mount the packet archive.</p>
           <form id="archive-form" class="archive-form">
             <label for="archive-password">RECOVERY PHRASE</label>
-            <div><input id="archive-password" type="password" maxlength="5" autocomplete="off" spellcheck="false" placeholder="•••••" required /><button type="submit">AUTHENTICATE</button></div>
+            <div><input id="archive-password" type="password" autocomplete="off" spellcheck="false" required /><button type="submit">AUTHENTICATE</button></div>
             <p id="archive-status" role="status" aria-live="polite"></p>
           </form>
         </div>
@@ -226,13 +225,18 @@
       </section>
 
       <section class="view console-view about-view" data-view="about" aria-labelledby="about-title">
-        <header class="view-head"><p class="eyebrow">MISSION BRIEF / PUBLIC RELEASE</p><h1 id="about-title">ABOUT THE OBSERVATION</h1><p class="view-code">DOC 00-A</p></header>
+        <header class="view-head"><p class="eyebrow">PUBLIC INFORMATION / ETC</p><h1 id="about-title">ABOUT</h1><p class="view-code">FILE / 00-A</p></header>
         <div class="rule rule--heavy"></div>
-        <div class="about-grid">
-          <div class="about-statement"><span class="statement-index">01 / PURPOSE</span><p>ETC WEATHER OBSERVATION is an independent information station established in response to the present exceptional state of conditions.</p></div>
-          <div class="about-statement"><span class="statement-index">02 / MISSION</span><p>Our purpose is to maintain a reliable local signal and deliver the latest verified messages to students of the Entertainment Technology Center.</p></div>
-          <div class="about-statement about-statement--urgent"><span class="statement-index">03 / DIRECTIVE</span><p>Monitor each update. Keep your contact channel open. Do not rely on unverified transmissions.</p></div>
-          <blockquote>“Whatever happens next, we face it as one community.”<cite>— ETC OBSERVATION TEAM / 2026</cite></blockquote>
+        <div class="about-minimal">
+          <p class="about-minimal__index">00—A<br /><span>PUBLIC FILE</span></p>
+          <div class="about-minimal__copy">
+            <p>ETC Weather Observation is an observation station established in response to the current exceptional conditions. It is intended to deliver the latest available information to students of the Entertainment Technology Center.</p>
+            <p>Please monitor each update. We will move through this period together.</p>
+          </div>
+          <footer>
+            <span><i></i> STATION ACTIVE</span>
+            <span>ETC / PITTSBURGH / 2026</span>
+          </footer>
         </div>
       </section>
 

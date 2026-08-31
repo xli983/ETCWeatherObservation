@@ -1,4 +1,23 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+
+const staticAssets = [
+  'index.html',
+  'style.css',
+  'script.js',
+  'robots.txt',
+  'sitemap.xml',
+  'CNAME',
+  'icon_black.ico',
+  'icon_white.ico',
+  'fish_black.png',
+  'og.png',
+];
+
+mkdirSync('dist/server', { recursive: true });
+mkdirSync('dist/static', { recursive: true });
+mkdirSync('dist/.openai', { recursive: true });
+staticAssets.forEach((asset) => copyFileSync(asset, `dist/static/${asset}`));
+copyFileSync('.openai/hosting.json', 'dist/.openai/hosting.json');
 
 const textAssets = {
   '/': ['index.html', 'text/html; charset=utf-8'],
@@ -12,6 +31,7 @@ const textAssets = {
 const binaryAssets = {
   '/icon_black.ico': ['icon_black.ico', 'image/x-icon'],
   '/icon_white.ico': ['icon_white.ico', 'image/x-icon'],
+  '/fish_black.png': ['fish_black.png', 'image/png'],
 };
 
 const encodedText = Object.fromEntries(

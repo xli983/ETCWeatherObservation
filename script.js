@@ -314,7 +314,6 @@ const archiveRecords = document.querySelector('#archive-records');
 function unlockArchive() {
   archiveGate.hidden = true;
   archiveRecords.hidden = false;
-  document.querySelector('.nav-lock').textContent = 'OPEN';
   window.sessionStorage.setItem('etc-archive-unlocked', 'true');
 }
 
@@ -344,6 +343,8 @@ if (observationRail) {
 
   observationRail.addEventListener('pointerleave', () => {
     observationRail.style.setProperty('--nav-y', '50%');
+    observationRail.classList.remove('is-peeking');
+    observationRail.querySelector(':focus')?.blur();
   });
 
   if (!window.sessionStorage.getItem('etc-rail-seen') && window.matchMedia('(min-width: 821px)').matches) {
