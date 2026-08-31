@@ -114,6 +114,57 @@
       <p class="side-note" aria-hidden="true">ETC / OBSERVATION SERIES / 2026</p>
     </main>
 
+    <dialog class="dispatch" id="intake-dialog" aria-labelledby="intake-title">
+      <div class="dispatch__card">
+        <header class="dispatch__head">
+          <div>
+            <p class="eyebrow">INTAKE / PRIORITY DISPATCH</p>
+            <h2 id="intake-title">
+              <span class="dispatch__lead">CONGRATS, WELCOME TO</span>
+              <span class="dispatch__name">ETC WEATHER OBSERVATION.</span>
+            </h2>
+          </div>
+          <button class="dispatch__close" id="intake-close" type="button" aria-label="Dismiss dispatch">
+            ✕
+          </button>
+        </header>
+
+        <div class="rule rule--heavy" aria-hidden="true"></div>
+
+        <p class="dispatch__deck">ENTER YOUR ANDREW ID FOR THE PROJECT.</p>
+
+        <form
+          class="email-form"
+          id="intake-email-form"
+          action="https://formspree.io/f/xzebzavr"
+          method="post"
+          novalidate
+        >
+          <label for="intake-andrew-username">ANDREW EMAIL</label>
+          <div class="email-form__entry">
+            <div class="email-address">
+              <input
+                id="intake-andrew-username"
+                type="text"
+                inputmode="email"
+                autocomplete="username"
+                autocapitalize="none"
+                spellcheck="false"
+                maxlength="64"
+                pattern="[A-Za-z0-9._+-]+"
+                aria-describedby="intake-form-status"
+                placeholder="AndrewID"
+                required
+              />
+              <span class="email-domain">@andrew.cmu.edu</span>
+            </div>
+            <button class="submit-button" type="submit">SUBMIT</button>
+          </div>
+          <p class="email-form__status" id="intake-form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </dialog>
+
     <noscript>This countdown needs JavaScript to run.</noscript>
     <script type="module" src="./script.js"></script>
   </body>

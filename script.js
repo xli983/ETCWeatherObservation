@@ -12,7 +12,6 @@ const ALLOWED_USERNAME = /^[A-Za-z0-9._+-]+$/;
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;
-const DAY = 24 * HOUR;
 
 const elements = {
   body: document.body,
@@ -25,10 +24,8 @@ const elements = {
   packetId: document.querySelector('#packet-id'),
   checksum: document.querySelector('#checksum'),
   syncState: document.querySelector('#sync-state'),
-  emailForm: document.querySelector('#andrew-email-form'),
-  emailInput: document.querySelector('#andrew-username'),
-  emailSubmit: document.querySelector('#email-submit'),
-  emailStatus: document.querySelector('#email-form-status'),
+  intakeDialog: document.querySelector('#intake-dialog'),
+  intakeClose: document.querySelector('#intake-close'),
 };
 
 let previousValues = {};
@@ -118,9 +115,9 @@ function scheduleTick() {
   window.setTimeout(scheduleTick, SECOND - (Date.now() % SECOND) + 12);
 }
 
-function setFormStatus(message, type = '') {
-  elements.emailStatus.textContent = message;
-  elements.emailStatus.className = `email-form__status${type ? ` is-${type}` : ''}`;
+function setFormStatus(status, message, type = '') {
+  status.textContent = message;
+  status.className = `email-form__status${type ? ` is-${type}` : ''}`;
 }
 
 function validateUsername(rawValue) {
@@ -148,68 +145,93 @@ function validateUsername(rawValue) {
   return { valid: true, username };
 }
 
-elements.emailInput.addEventListener('beforeinput', (event) => {
-  if (event.data?.includes('@')) {
+function wireEmailForm(form, { onSuccess } = {}) {
+  const input = form.querySelector('.email-address input');
+  const submit = form.querySelector('.submit-button');
+  const status = form.querySelector('.email-form__status');
+  const submitLabel = submit.textContent;
+
+  input.addEventListener('beforeinput', (event) => {
+    if (event.data?.includes('@')) {
+      event.preventDefault();
+      input.setAttribute('aria-invalid', 'true');
+      setFormStatus(status, 'Do not include @ in your Andrew ID.', 'error');
+    }
+  });
+
+  input.addEventListener('input', () => {
+    const originalValue = input.value;
+    const sanitizedValue = originalValue.replace(/@/g, '').replace(/[^A-Za-z0-9._+-]/g, '');
+
+    if (sanitizedValue !== originalValue) {
+      input.value = sanitizedValue;
+      input.setAttribute('aria-invalid', 'true');
+      setFormStatus(status, 'Use only letters, numbers, periods, underscores, plus signs, and hyphens.', 'error');
+      return;
+    }
+
+    input.removeAttribute('aria-invalid');
+    setFormStatus(status, '');
+  });
+
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    elements.emailInput.setAttribute('aria-invalid', 'true');
-    setFormStatus('Do not include @ in your Andrew ID.', 'error');
-  }
-});
+    const validation = validateUsername(input.value);
 
-elements.emailInput.addEventListener('input', () => {
-  const originalValue = elements.emailInput.value;
-  const sanitizedValue = originalValue.replace(/@/g, '').replace(/[^A-Za-z0-9._+-]/g, '');
+    if (!validation.valid) {
+      input.setAttribute('aria-invalid', 'true');
+      setFormStatus(status, validation.message, 'error');
+      input.focus();
+      return;
+    }
 
-  if (sanitizedValue !== originalValue) {
-    elements.emailInput.value = sanitizedValue;
-    elements.emailInput.setAttribute('aria-invalid', 'true');
-    setFormStatus('Use only letters, numbers, periods, underscores, plus signs, and hyphens.', 'error');
-    return;
-  }
+    const completeEmail = `${validation.username}${ANDREW_DOMAIN}`;
+    const formData = new FormData();
+    formData.append('email', completeEmail);
 
-  elements.emailInput.removeAttribute('aria-invalid');
-  setFormStatus('');
-});
+    input.value = validation.username;
+    input.removeAttribute('aria-invalid');
+    submit.disabled = true;
+    submit.textContent = 'Submitting...';
+    setFormStatus(status, '');
 
-elements.emailForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const validation = validateUsername(elements.emailInput.value);
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: formData,
+      });
 
-  if (!validation.valid) {
-    elements.emailInput.setAttribute('aria-invalid', 'true');
-    setFormStatus(validation.message, 'error');
-    elements.emailInput.focus();
-    return;
-  }
+      if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
 
-  const completeEmail = `${validation.username}${ANDREW_DOMAIN}`;
-  const formData = new FormData();
-  formData.append('email', completeEmail);
+      input.value = '';
+      setFormStatus(status, 'Success. We received your Andrew email.', 'success');
+      onSuccess?.();
+    } catch {
+      setFormStatus(status, 'Submission failed. Please try again later.', 'error');
+    } finally {
+      submit.disabled = false;
+      submit.textContent = submitLabel;
+    }
+  });
+}
 
-  elements.emailInput.value = validation.username;
-  elements.emailInput.removeAttribute('aria-invalid');
-  elements.emailSubmit.disabled = true;
-  elements.emailSubmit.textContent = 'Submitting...';
-  setFormStatus('');
+function setupIntakeDialog() {
+  const dialog = elements.intakeDialog;
 
-  try {
-    const response = await fetch(elements.emailForm.action, {
-      method: 'POST',
-      headers: { Accept: 'application/json' },
-      body: formData,
-    });
+  wireEmailForm(document.querySelector('#intake-email-form'), {
+    onSuccess: () => window.setTimeout(() => dialog.close(), 1400),
+  });
 
-    if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
+  elements.intakeClose.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
 
-    elements.emailInput.value = '';
-    setFormStatus('Success. We received your Andrew email.', 'success');
-  } catch {
-    setFormStatus('Submission failed. Please try again later.', 'error');
-  } finally {
-    elements.emailSubmit.disabled = false;
-    elements.emailSubmit.textContent = 'SUBMIT';
-  }
-});
+  dialog.showModal();
+}
 
+wireEmailForm(document.querySelector('#andrew-email-form'));
+setupIntakeDialog();
 updateStaticDetails();
 scheduleTick();
