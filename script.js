@@ -4,6 +4,7 @@
 const COUNTDOWN_CONFIG = {
   targetDate: '2026-09-02T08:00:00-04:00',
   locale: 'zh-CN',
+  packetId: '0005',
 };
 
 const ANDREW_DOMAIN = '@andrew.cmu.edu';
@@ -67,11 +68,10 @@ function makeChecksum(value) {
 function updateStaticDetails() {
   const target = new Date(COUNTDOWN_CONFIG.targetDate);
   const now = new Date();
-  const packetSeed = Math.abs(Math.round((target.getTime() - now.getTime()) / DAY));
 
   elements.targetDisplay.textContent = `${formatDate(target, true)} / UTC${formatOffset(target)}`;
   elements.issuedDate.textContent = formatDate(now);
-  elements.packetId.textContent = pad(packetSeed % 10000, 4);
+  elements.packetId.textContent = COUNTDOWN_CONFIG.packetId;
   elements.checksum.textContent = makeChecksum(COUNTDOWN_CONFIG.targetDate);
 }
 
