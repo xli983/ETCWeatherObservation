@@ -10,6 +10,9 @@ const staticAssets = [
   'icon_black.ico',
   'icon_white.ico',
   'fish_black.png',
+  '8.24_01.png',
+  '8.27_01.png',
+  '8.30_01.png',
   'og.png',
 ];
 
@@ -32,6 +35,9 @@ const binaryAssets = {
   '/icon_black.ico': ['icon_black.ico', 'image/x-icon'],
   '/icon_white.ico': ['icon_white.ico', 'image/x-icon'],
   '/fish_black.png': ['fish_black.png', 'image/png'],
+  '/8.24_01.png': ['8.24_01.png', 'image/png'],
+  '/8.27_01.png': ['8.27_01.png', 'image/png'],
+  '/8.30_01.png': ['8.30_01.png', 'image/png'],
 };
 
 const encodedText = Object.fromEntries(

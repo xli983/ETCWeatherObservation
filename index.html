@@ -173,25 +173,15 @@
       </section>
 
       <section class="view console-view" data-view="archive" aria-labelledby="archive-title">
-        <header class="view-head"><p class="eyebrow">RESTRICTED / RECORD STORAGE</p><h1 id="archive-title">PACKET ARCHIVE</h1><p class="view-code">AUTH LEVEL 03</p></header>
+        <header class="view-head"><p class="eyebrow">PACKET RECORDS / LOCAL</p><h1 id="archive-title">ARCHIVE</h1><p class="view-code">05 RECORDS / READ ONLY</p></header>
         <div class="rule rule--heavy"></div>
-        <div class="archive-gate" id="archive-gate">
-          <p class="gate-icon" aria-hidden="true">×</p>
-          <p class="eyebrow">ENCRYPTED VOLUME / ETC-ARC-01</p>
-          <h2>ACCESS CREDENTIAL REQUIRED</h2>
-          <form id="archive-form" class="archive-form">
-            <label for="archive-password">RECOVERY PHRASE</label>
-            <div><input id="archive-password" type="password" autocomplete="off" spellcheck="false" required /><button type="submit">AUTHENTICATE</button></div>
-            <p id="archive-status" role="status" aria-live="polite"></p>
-          </form>
-        </div>
-        <div class="archive-records" id="archive-records" hidden>
-          <div class="archive-summary"><p><span>VOLUME</span> ETC-ARC-01</p><p><span>PACKETS</span> 0004</p><p><span>INTEGRITY</span> VERIFIED</p></div>
-          <button class="packet-row" type="button"><span>0004</span><strong>08/27/2026</strong><em>LOCAL WEATHER UPDATE</em><b>VERIFIED ↗</b></button>
-          <button class="packet-row" type="button"><span>0003</span><strong>08/24/2026</strong><em>ATMOSPHERIC ANOMALY</em><b>VERIFIED ↗</b></button>
-          <button class="packet-row" type="button"><span>0002</span><strong>08/21/2026</strong><em>CAMPUS CONDITIONS</em><b>VERIFIED ↗</b></button>
-          <button class="packet-row" type="button"><span>0001</span><strong>08/18/2026</strong><em>INITIAL TRANSMISSION</em><b>VERIFIED ↗</b></button>
-        </div>
+        <nav class="archive-list" aria-label="Weather packet archive">
+          <a class="archive-link" href="#packet-0005" data-packet="0005" data-date="08/30/2026" data-image="./8.30_01.png"><strong>PACKET 0005</strong><time datetime="2026-08-30">08/30/2026</time><span>[VIEW]</span></a>
+          <a class="archive-link" href="#packet-0004" data-packet="0004" data-date="08/27/2026" data-image="./8.27_01.png"><strong>PACKET 0004</strong><time datetime="2026-08-27">08/27/2026</time><span>[VIEW]</span></a>
+          <a class="archive-link" href="#packet-0003" data-packet="0003" data-date="08/24/2026" data-image="./8.24_01.png"><strong>PACKET 0003</strong><time datetime="2026-08-24">08/24/2026</time><span>[VIEW]</span></a>
+          <a class="archive-link is-restricted" href="#restricted-0002" data-packet="0002" data-date="08/21/2026" data-restricted="true"><strong>PACKET 0002</strong><time datetime="2026-08-21">08/21/2026</time><span>[RESTRICTED]</span></a>
+          <a class="archive-link is-restricted" href="#restricted-0001" data-packet="0001" data-date="08/18/2026" data-restricted="true"><strong>PACKET 0001</strong><time datetime="2026-08-18">08/18/2026</time><span>[RESTRICTED]</span></a>
+        </nav>
       </section>
 
       <section class="view console-view station-view" data-view="station" aria-labelledby="station-title">
@@ -242,6 +232,36 @@
 
       <p class="side-note" aria-hidden="true">ETC / OBSERVATION SERIES / 2026</p>
     </main>
+
+    <dialog class="packet-viewer" id="packet-viewer" aria-labelledby="packet-viewer-title">
+      <div class="packet-viewer__card">
+        <header class="packet-dialog__head">
+          <div>
+            <p class="eyebrow" id="packet-viewer-meta">PACKET RECORD</p>
+            <h2 id="packet-viewer-title">WEATHER BULLETIN</h2>
+          </div>
+          <button class="packet-dialog__close" id="packet-viewer-close" type="button" aria-label="Close packet">✕</button>
+        </header>
+        <img id="packet-viewer-image" alt="" />
+      </div>
+    </dialog>
+
+    <dialog class="restricted-dialog" id="restricted-dialog" aria-labelledby="restricted-title">
+      <div class="restricted-dialog__card">
+        <header class="packet-dialog__head">
+          <p class="eyebrow">RESTRICTED ARCHIVE</p>
+          <button class="packet-dialog__close" id="restricted-close" type="button" aria-label="Close restricted archive">✕</button>
+        </header>
+        <h2 id="restricted-title">OPERATOR ACCESS REQUIRED</h2>
+        <p class="restricted-dialog__packet" id="restricted-packet">PACKET RECORD</p>
+        <form id="archive-form" class="archive-form">
+          <label for="archive-password">PASSWORD:</label>
+          <div class="restricted-entry"><input id="archive-password" type="password" autocomplete="off" spellcheck="false" required /></div>
+          <button class="restricted-access" type="submit">ACCESS</button>
+          <p id="archive-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </dialog>
 
     <dialog class="dispatch" id="intake-dialog" aria-labelledby="intake-title">
       <div class="dispatch__card">

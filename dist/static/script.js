@@ -305,29 +305,90 @@ window.addEventListener('hashchange', () => showView(location.hash.slice(1), { u
 showView(location.hash.slice(1) || 'home', { updateHash: false });
 
 /* Restricted packet archive: lightweight ARG gate, not security for sensitive data. */
+const ADMIN_PASSWORD = 'DMJRC';
+const archiveLinks = [...document.querySelectorAll('.archive-link')];
 const archiveForm = document.querySelector('#archive-form');
 const archivePassword = document.querySelector('#archive-password');
 const archiveStatus = document.querySelector('#archive-status');
-const archiveGate = document.querySelector('#archive-gate');
-const archiveRecords = document.querySelector('#archive-records');
+const packetViewer = document.querySelector('#packet-viewer');
+const packetViewerClose = document.querySelector('#packet-viewer-close');
+const packetViewerMeta = document.querySelector('#packet-viewer-meta');
+const packetViewerImage = document.querySelector('#packet-viewer-image');
+const restrictedDialog = document.querySelector('#restricted-dialog');
+const restrictedClose = document.querySelector('#restricted-close');
+const restrictedPacket = document.querySelector('#restricted-packet');
+let pendingRestrictedPacket = null;
 
-function unlockArchive() {
-  archiveGate.hidden = true;
-  archiveRecords.hidden = false;
-  window.sessionStorage.setItem('etc-archive-unlocked', 'true');
+function closePacketViewer() {
+  packetViewer.close();
+  packetViewerImage.removeAttribute('src');
 }
 
-if (window.sessionStorage.getItem('etc-archive-unlocked') === 'true') unlockArchive();
+function openPacket(record) {
+  packetViewerMeta.textContent = `PACKET ${record.packet} / ${record.date}`;
+  packetViewerImage.src = record.image;
+  packetViewerImage.alt = `Weather bulletin packet ${record.packet}, issued ${record.date}`;
+  packetViewer.showModal();
+}
+
+function closeRestrictedDialog() {
+  restrictedDialog.close();
+  archivePassword.value = '';
+  archiveStatus.textContent = '';
+  archiveStatus.removeAttribute('data-state');
+  pendingRestrictedPacket = null;
+}
+
+archiveLinks.forEach((link) => {
+  link.addEventListener('click', (event) => {
+    event.preventDefault();
+    const record = {
+      packet: link.dataset.packet,
+      date: link.dataset.date,
+      image: link.dataset.image,
+    };
+
+    if (link.dataset.restricted === 'true') {
+      pendingRestrictedPacket = record;
+      restrictedPacket.textContent = `PACKET ${record.packet} / ${record.date}`;
+      archivePassword.value = '';
+      archiveStatus.textContent = '';
+      archiveStatus.removeAttribute('data-state');
+      restrictedDialog.showModal();
+      window.setTimeout(() => archivePassword.focus(), 0);
+      return;
+    }
+
+    openPacket(record);
+  });
+});
+
+packetViewerClose.addEventListener('click', closePacketViewer);
+packetViewer.addEventListener('click', (event) => {
+  if (event.target === packetViewer) closePacketViewer();
+});
+packetViewer.addEventListener('close', () => packetViewerImage.removeAttribute('src'));
+
+restrictedClose.addEventListener('click', closeRestrictedDialog);
+restrictedDialog.addEventListener('click', (event) => {
+  if (event.target === restrictedDialog) closeRestrictedDialog();
+});
+restrictedDialog.addEventListener('close', () => {
+  archivePassword.value = '';
+  pendingRestrictedPacket = null;
+});
 
 archiveForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  if (archivePassword.value.trim().toUpperCase() === 'DMJRC') {
-    archiveStatus.textContent = 'CREDENTIAL ACCEPTED / MOUNTING VOLUME…';
-    archiveStatus.style.color = '#245f3d';
-    window.setTimeout(unlockArchive, 550);
+  if (archivePassword.value.trim().toUpperCase() === ADMIN_PASSWORD) {
+    archiveStatus.textContent = `ACCESS GRANTED / PACKET ${pendingRestrictedPacket?.packet ?? ''}`;
+    archiveStatus.dataset.state = 'success';
+    archivePassword.value = '';
     return;
   }
-  archiveStatus.textContent = 'ACCESS DENIED / INVALID RECOVERY PHRASE';
+
+  archiveStatus.textContent = 'ACCESS DENIED';
+  archiveStatus.dataset.state = 'error';
   archivePassword.value = '';
   archivePassword.focus();
   archiveForm.animate([{ transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(0)' }], { duration: 180 });
