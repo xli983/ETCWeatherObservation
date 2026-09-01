@@ -288,7 +288,7 @@ function showView(route, { updateHash = true } = {}) {
     item.classList.toggle('is-active', active);
     item.setAttribute('aria-current', active ? 'page' : 'false');
   });
-  document.title = `${nextRoute === 'home' ? 'ETC Weather Observation' : nextRoute.replace('-', ' ').toUpperCase()} — ETC Observation`;
+  document.title = nextRoute === 'home' ? 'ETC Weather Observation' : `${nextRoute.replace('-', ' ').toUpperCase()} — ETC Observation`;
   if (updateHash) history.replaceState(null, '', nextRoute === 'home' ? '#home' : `#${nextRoute}`);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
