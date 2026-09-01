@@ -841,7 +841,7 @@ button {
 .console-view > .rule { margin: 2rem 0 0; }
 
 .archive-list { padding-top: clamp(3rem,8vh,7rem); }
-.archive-link { display: grid; grid-template-columns: minmax(0,1fr) minmax(130px,.45fr) auto; gap: 1.5rem; align-items: center; padding: 1.45rem .5rem; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; transition: padding 180ms,background 180ms,color 180ms; }
+.archive-link { display: grid; grid-template-columns: minmax(0,1fr) minmax(130px,.45fr) 7.5rem; gap: 1.5rem; align-items: center; padding: 1.45rem .5rem; border-top: 1px solid var(--line); color: var(--ink); text-decoration: none; transition: padding 180ms,background 180ms,color 180ms; }
 .archive-link:last-child { border-bottom: 1px solid var(--line); }
 .archive-link:hover,.archive-link:focus-visible { padding-right: 1rem; padding-left: 1rem; color: var(--paper); background: var(--ink); outline: 0; }
 .archive-link strong { font-family: var(--sans); font-size: clamp(1rem,1.8vw,1.55rem); font-weight: 300; letter-spacing: -.015em; }
