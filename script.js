@@ -24,12 +24,16 @@ const elements = {
   packetId: document.querySelector('#packet-id'),
   checksum: document.querySelector('#checksum'),
   syncState: document.querySelector('#sync-state'),
+  countdownPanel: document.querySelector('.countdown-panel'),
+  signalFragment: document.querySelector('#signal-fragment'),
   intakeDialog: document.querySelector('#intake-dialog'),
   intakeClose: document.querySelector('#intake-close'),
 };
 
 let previousValues = {};
 let announcedMinute = null;
+const GLITCH_GLYPHS = '01#%&/\\<>[]{}?!=+*ΞЖȜƵ';
+const glitchResets = new WeakMap();
 
 function pad(value, size = 2) {
   return String(value).padStart(size, '0');
@@ -75,11 +79,58 @@ function updateStaticDetails() {
 function renderValue(element, key, value) {
   if (previousValues[key] === value) return;
   previousValues[key] = value;
+  element.dataset.value = value;
   element.classList.remove('is-ticking');
   void element.offsetWidth;
   element.textContent = value;
   element.classList.add('is-ticking');
   window.setTimeout(() => element.classList.remove('is-ticking'), 120);
+}
+
+function corruptText(value, intensity = 0.5) {
+  return [...value]
+    .map((character) => {
+      if (character === ' ' || Math.random() > intensity) return character;
+      return GLITCH_GLYPHS[Math.floor(Math.random() * GLITCH_GLYPHS.length)];
+    })
+    .join('');
+}
+
+function corruptValue(element) {
+  const currentValue = element.dataset.value || element.textContent;
+  const previousReset = glitchResets.get(element);
+  if (previousReset) window.clearTimeout(previousReset);
+
+  element.textContent = corruptText(currentValue, 0.75);
+  element.classList.add('is-corrupted');
+
+  const reset = window.setTimeout(() => {
+    element.textContent = element.dataset.value || currentValue;
+    element.classList.remove('is-corrupted');
+  }, 45 + Math.random() * 100);
+  glitchResets.set(element, reset);
+}
+
+function scheduleSignalInterference() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  window.setTimeout(() => {
+    const values = [elements.hours, elements.minutes, elements.seconds];
+    const burstSize = Math.random() > 0.82 ? values.length : 1;
+    values.sort(() => Math.random() - 0.5).slice(0, burstSize).forEach(corruptValue);
+
+    elements.countdownPanel.classList.add('is-interfering');
+    elements.signalFragment.textContent = Math.random() > 0.48
+      ? `// ${corruptText('SIGNAL_UNSTABLE', 0.36)}`
+      : `// ERR_${corruptText(makeChecksum(String(Date.now())).slice(0, 4), 0.58)}`;
+
+    window.setTimeout(() => {
+      elements.countdownPanel.classList.remove('is-interfering');
+      elements.signalFragment.textContent = '// SIGNAL_UNSTABLE';
+    }, 70 + Math.random() * 150);
+
+    scheduleSignalInterference();
+  }, 110 + Math.random() * 520);
 }
 
 function updateCountdown() {
@@ -238,6 +289,7 @@ wireEmailForm(document.querySelector('#andrew-email-form'));
 setupIntakeDialog();
 updateStaticDetails();
 scheduleTick();
+scheduleSignalInterference();
 
 /* ================================================================
    OBSERVATION CONSOLE / VIEW ROUTING

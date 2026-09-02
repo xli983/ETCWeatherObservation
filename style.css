@@ -167,42 +167,64 @@ button {
 
 .countdown-panel {
   position: relative;
+  isolation: isolate;
   min-height: min(59vh, 650px);
   padding: clamp(2.4rem, 6vh, 5.5rem) clamp(1rem, 3vw, 3rem) clamp(1.4rem, 3vh, 2.4rem);
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  border-right: 1px solid #32322e;
+  border-bottom: 1px solid #32322e;
+  border-left: 1px solid #32322e;
+  color: #e7e5dc;
   overflow: hidden;
   background:
-    linear-gradient(rgba(233, 231, 223, 0.88), rgba(233, 231, 223, 0.88)),
-    repeating-linear-gradient(0deg, transparent 0 49px, rgba(17, 18, 16, 0.07) 49px 50px);
+    radial-gradient(circle at 50% 45%, rgba(118, 0, 0, 0.13), transparent 42%),
+    linear-gradient(115deg, #070806 0%, #10110e 48%, #050605 100%);
+  box-shadow: inset 0 0 80px rgba(0,0,0,.7),inset 0 0 160px rgba(92,0,0,.1);
 }
 
 .countdown-panel::before,
 .countdown-panel::after {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
+  z-index: -1;
+  inset: 0;
   content: '';
-  background: linear-gradient(transparent, var(--hairline) 20%, var(--hairline) 80%, transparent);
+  pointer-events: none;
 }
 
 .countdown-panel::before {
-  left: 33.3333%;
+  background:
+    linear-gradient(90deg, transparent calc(33.333% - .5px), rgba(231,229,220,.13) 33.333%, transparent calc(33.333% + .5px), transparent calc(66.666% - .5px), rgba(231,229,220,.13) 66.666%, transparent calc(66.666% + .5px)),
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(231,229,220,.035) 3px 4px);
+  animation: signal-roll 7s linear infinite;
 }
 
 .countdown-panel::after {
-  right: 33.3333%;
+  inset: -40% -15%;
+  opacity: .28;
+  background: linear-gradient(100deg, transparent 35%, rgba(214,0,0,.23) 49%, rgba(220,220,202,.08) 50%, transparent 64%);
+  transform: translateX(-55%);
+  animation: signal-sweep 5.8s steps(11,end) infinite;
+}
+
+@keyframes signal-roll { to { background-position: 0 0,0 80px; } }
+@keyframes signal-sweep { 74%,100% { transform: translateX(55%); } }
+
+.countdown-panel.is-interfering { animation: panel-tear 130ms steps(2,end); }
+@keyframes panel-tear {
+  25% { filter: contrast(1.8) brightness(1.3); transform: translateX(-2px); }
+  50% { filter: hue-rotate(-18deg) contrast(1.4); transform: translateX(3px); }
+  75% { clip-path: inset(1.5% 0 2% 0); transform: translateX(-1px); }
 }
 
 .target-kicker {
   position: relative;
   z-index: 1;
   margin: 0;
+  color: rgba(231,229,220,.66);
   text-align: center;
   font-size: 0.65rem;
 }
+
+.signal-fragment { margin-left: .65rem; color: #d43c32; text-shadow: 0 0 12px rgba(212,60,50,.7); }
 
 .timer {
   position: relative;
@@ -226,6 +248,7 @@ button {
   left: 100%;
   z-index: 2;
   content: ':';
+  color: rgba(231,229,220,.48);
   font-family: var(--sans);
   font-size: clamp(3.5rem, 7vw, 7.8rem);
   font-weight: 300;
@@ -234,7 +257,9 @@ button {
 }
 
 .time-value {
+  position: relative;
   display: block;
+  color: #ece9df;
   font-family: var(--sans);
   font-size: clamp(4.4rem, 10vw, 10.8rem);
   font-weight: 300;
@@ -242,8 +267,18 @@ button {
   letter-spacing: -0.075em;
   line-height: 0.78;
   text-indent: -0.075em;
+  text-shadow: -3px 0 0 rgba(195,0,28,.55),3px 0 0 rgba(0,143,158,.32),0 0 28px rgba(245,242,224,.12);
+  animation: number-breathe 3.8s steps(8,end) infinite;
   transition: opacity 120ms ease, filter 120ms ease, transform 120ms ease;
 }
+
+.time-value::before,.time-value::after { position: absolute; inset: 0; content: attr(data-value); opacity: 0; pointer-events: none; }
+.time-value::before { color: #d90025; transform: translateX(-.04em); clip-path: inset(8% 0 58%); }
+.time-value::after { color: #00a0aa; transform: translateX(.045em); clip-path: inset(64% 0 6%); }
+.time-value.is-corrupted::before,.time-value.is-corrupted::after { opacity: .82; animation: digit-split 90ms steps(2,end) infinite; }
+
+@keyframes digit-split { 50% { transform: translateX(.09em); filter: blur(.5px); } }
+@keyframes number-breathe { 48% { opacity: 1; } 49% { opacity: .72; } 50% { opacity: 1; } }
 
 .time-value.is-ticking {
   opacity: 0.58;
@@ -255,6 +290,7 @@ button {
   display: block;
   margin-top: clamp(1.25rem, 3vh, 2.1rem);
   font-size: clamp(0.55rem, 0.65vw, 0.75rem);
+  color: rgba(231,229,220,.55);
 }
 
 .target-line {
@@ -266,12 +302,14 @@ button {
   justify-content: space-between;
   gap: 2rem;
   padding-top: 0.8rem;
-  border-top: 1px solid var(--hairline);
+  border-top: 1px solid rgba(231,229,220,.16);
+  color: rgba(231,229,220,.55);
   font-size: clamp(0.55rem, 0.65vw, 0.72rem);
 }
 
 .target-line__label {
-  color: var(--ink-soft);
+  color: #d43c32;
+  text-shadow: 0 0 10px rgba(212,60,50,.45);
 }
 
 .target-line__value {
