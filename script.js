@@ -2,16 +2,13 @@
    COUNTDOWN CONFIGURATION — SET THE TARGET DATE HERE
    ================================================================ */
 const COUNTDOWN_CONFIG = {
-  targetDate: '2026-09-02T08:00:00-04:00',
   locale: 'zh-CN',
   packetId: '0005',
+  signalTime: ['19', '15', '19'],
 };
 
 const ANDREW_DOMAIN = '@andrew.cmu.edu';
 const ALLOWED_USERNAME = /^[A-Za-z0-9._+-]+$/;
-const SECOND = 1000;
-const MINUTE = 60 * SECOND;
-const HOUR = 60 * MINUTE;
 
 const elements = {
   body: document.body,
@@ -35,10 +32,6 @@ let announcedMinute = null;
 const GLITCH_GLYPHS = '01#%&/\\<>[]{}?!=+*ΞЖȜƵ';
 const glitchResets = new WeakMap();
 
-function pad(value, size = 2) {
-  return String(value).padStart(size, '0');
-}
-
 function formatDate(date, withTime = false) {
   return new Intl.DateTimeFormat(COUNTDOWN_CONFIG.locale, {
     year: 'numeric',
@@ -48,12 +41,6 @@ function formatDate(date, withTime = false) {
       ? { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }
       : {}),
   }).format(date).replaceAll('/', '.');
-}
-
-function formatOffset(date) {
-  const minutes = -date.getTimezoneOffset();
-  const sign = minutes >= 0 ? '+' : '-';
-  return `${sign}${pad(Math.floor(Math.abs(minutes) / 60))}:${pad(Math.abs(minutes) % 60)}`;
 }
 
 function makeChecksum(value) {
@@ -67,13 +54,13 @@ function makeChecksum(value) {
 }
 
 function updateStaticDetails() {
-  const target = new Date(COUNTDOWN_CONFIG.targetDate);
   const now = new Date();
+  const signalTime = COUNTDOWN_CONFIG.signalTime.join(':');
 
-  elements.targetDisplay.textContent = `${formatDate(target, true)} / UTC${formatOffset(target)}`;
+  elements.targetDisplay.textContent = `SIGNAL LOCK / ${signalTime}`;
   elements.issuedDate.textContent = formatDate(now);
   elements.packetId.textContent = COUNTDOWN_CONFIG.packetId;
-  elements.checksum.textContent = makeChecksum(COUNTDOWN_CONFIG.targetDate);
+  elements.checksum.textContent = makeChecksum(signalTime);
 }
 
 function renderValue(element, key, value) {
@@ -101,13 +88,19 @@ function corruptValue(element) {
   const previousReset = glitchResets.get(element);
   if (previousReset) window.clearTimeout(previousReset);
 
-  element.textContent = corruptText(currentValue, 0.75);
+  const protectedIndex = Math.floor(Math.random() * currentValue.length);
+  const corruptedValue = [...currentValue]
+    .map((character, index) => index === protectedIndex ? character : corruptText(character, 1))
+    .join('');
+  element.dataset.corrupt = corruptedValue;
+  element.textContent = currentValue;
   element.classList.add('is-corrupted');
 
   const reset = window.setTimeout(() => {
     element.textContent = element.dataset.value || currentValue;
+    element.dataset.corrupt = element.dataset.value || currentValue;
     element.classList.remove('is-corrupted');
-  }, 45 + Math.random() * 100);
+  }, 90 + Math.random() * 170);
   glitchResets.set(element, reset);
 }
 
@@ -116,7 +109,7 @@ function scheduleSignalInterference() {
 
   window.setTimeout(() => {
     const values = [elements.hours, elements.minutes, elements.seconds];
-    const burstSize = Math.random() > 0.82 ? values.length : 1;
+    const burstSize = Math.random() > 0.24 ? values.length : 2;
     values.sort(() => Math.random() - 0.5).slice(0, burstSize).forEach(corruptValue);
 
     elements.countdownPanel.classList.add('is-interfering');
@@ -130,40 +123,31 @@ function scheduleSignalInterference() {
     }, 70 + Math.random() * 150);
 
     scheduleSignalInterference();
-  }, 110 + Math.random() * 520);
+  }, 45 + Math.random() * 240);
 }
 
 function updateCountdown() {
-  const targetTime = new Date(COUNTDOWN_CONFIG.targetDate).getTime();
-  const remaining = Math.max(0, targetTime - Date.now());
-  const expired = remaining <= 0;
-  const hours = Math.floor(remaining / HOUR);
-  const minutes = Math.floor((remaining % HOUR) / MINUTE);
-  const seconds = Math.floor((remaining % MINUTE) / SECOND);
+  const [hours, minutes, seconds] = COUNTDOWN_CONFIG.signalTime;
 
-  renderValue(elements.hours, 'hours', pad(hours, Math.max(2, String(hours).length)));
-  renderValue(elements.minutes, 'minutes', pad(minutes));
-  renderValue(elements.seconds, 'seconds', pad(seconds));
+  renderValue(elements.hours, 'hours', hours);
+  renderValue(elements.minutes, 'minutes', minutes);
+  renderValue(elements.seconds, 'seconds', seconds);
 
-  elements.statusLabel.textContent = expired ? 'COMPLETE' : 'ACTIVE';
-  elements.syncState.textContent = expired ? 'TERMINAL' : 'NOMINAL';
-  elements.body.classList.toggle('is-expired', expired);
+  elements.statusLabel.textContent = 'UNSTABLE';
+  elements.syncState.textContent = 'CORRUPTED';
+  elements.body.classList.remove('is-expired');
 
-  const currentMinute = Math.ceil(remaining / MINUTE);
-  if (announcedMinute !== currentMinute) {
-    announcedMinute = currentMinute;
+  if (announcedMinute !== minutes) {
+    announcedMinute = minutes;
     elements.hours.closest('[role="timer"]').setAttribute(
       'aria-label',
-      expired
-        ? 'Next update countdown complete'
-        : `${hours} hours, ${minutes} minutes and ${seconds} seconds remaining`,
+      `Corrupted signal displaying ${hours} hours, ${minutes} minutes and ${seconds} seconds`,
     );
   }
 }
 
 function scheduleTick() {
   updateCountdown();
-  window.setTimeout(scheduleTick, SECOND - (Date.now() % SECOND) + 12);
 }
 
 function setFormStatus(status, message, type = '') {
