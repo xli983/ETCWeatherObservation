@@ -588,6 +588,24 @@ button {
   cursor: not-allowed;
 }
 
+/* A refused dismissal flashes the card's border rather than shifting the card.
+   Translating it moves the layout box, which can widen the scrollable area
+   enough to flash a horizontal scrollbar — border colour costs no layout. */
+.dispatch__card.is-refused {
+  animation: dispatch-refuse 340ms ease-out;
+}
+
+@keyframes dispatch-refuse {
+  0%,
+  100% {
+    border-color: var(--ink);
+  }
+  22%,
+  70% {
+    border-color: #8b1e16;
+  }
+}
+
 .dispatch .rule--heavy {
   margin-top: 1.1rem;
 }

@@ -282,15 +282,22 @@ function setupIntakeDialog() {
   const dialog = elements.intakeDialog;
   const card = dialog.querySelector('.dispatch__card');
   const input = dialog.querySelector('#intake-andrew-username');
+  const status = dialog.querySelector('.email-form__status');
   let unlocked = false;
 
+  /* Explains the refusal instead of only nudging the card, and keeps the focus
+     call from scrolling the blocked page underneath. */
   function refuseDismissal() {
-    card.animate(
-      [{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }],
-      { duration: 190 },
-    );
-    input.focus();
+    card.classList.remove('is-refused');
+    void card.offsetWidth;
+    card.classList.add('is-refused');
+    setFormStatus(status, 'An Andrew ID is required to continue.', 'error');
+    input.focus({ preventScroll: true });
   }
+
+  card.addEventListener('animationend', (event) => {
+    if (event.animationName === 'dispatch-refuse') card.classList.remove('is-refused');
+  });
 
   wireEmailForm(document.querySelector('#intake-email-form'), {
     onSuccess: () => {
@@ -319,7 +326,7 @@ function setupIntakeDialog() {
   });
 
   dialog.showModal();
-  window.setTimeout(() => input.focus(), 0);
+  window.setTimeout(() => input.focus({ preventScroll: true }), 0);
 }
 
 wireEmailForm(document.querySelector('#andrew-email-form'));
