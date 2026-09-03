@@ -583,26 +583,9 @@ button {
   letter-spacing: 0.1em;
 }
 
-.dispatch__close {
-  flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 1px solid var(--ink);
-  border-radius: 0;
-  background: transparent;
-  cursor: pointer;
-  font-size: 0.72rem;
-  line-height: 1;
-  transition: color 150ms ease, background 150ms ease;
-}
-
-.dispatch__close:hover,
-.dispatch__close:focus-visible {
-  color: var(--paper-bright);
-  background: var(--ink);
-  outline: 2px solid var(--ink);
-  outline-offset: 2px;
+/* The intake dispatch cannot be dismissed until an Andrew ID is submitted. */
+.dispatch--required::backdrop {
+  cursor: not-allowed;
 }
 
 .dispatch .rule--heavy {

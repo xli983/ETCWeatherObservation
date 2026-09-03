@@ -9,6 +9,7 @@ const COUNTDOWN_CONFIG = {
 
 const ANDREW_DOMAIN = '@andrew.cmu.edu';
 const ALLOWED_USERNAME = /^[A-Za-z0-9._+-]+$/;
+const INTAKE_STORAGE_KEY = 'etc-intake-submitted';
 
 const elements = {
   body: document.body,
@@ -24,7 +25,6 @@ const elements = {
   countdownPanel: document.querySelector('.countdown-panel'),
   signalFragment: document.querySelector('#signal-fragment'),
   intakeDialog: document.querySelector('#intake-dialog'),
-  intakeClose: document.querySelector('#intake-close'),
 };
 
 let previousValues = {};
@@ -254,19 +254,72 @@ function wireEmailForm(form, { onSuccess } = {}) {
   });
 }
 
+/* Private browsing and blocked-storage settings make localStorage throw on
+   access, so both sides are guarded: if storage is unusable the gate simply
+   reappears on the next visit. */
+function hasCompletedIntake() {
+  try {
+    return window.localStorage.getItem(INTAKE_STORAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function rememberIntake() {
+  try {
+    window.localStorage.setItem(INTAKE_STORAGE_KEY, 'true');
+  } catch {
+    /* Storage unavailable — nothing to remember, the gate shows again later. */
+  }
+}
+
+/* The intake dispatch is a hard gate on the first visit: it only closes once an
+   Andrew ID has been submitted successfully, so every dismissal route is
+   disabled. Once submitted, the visitor is never asked again on this browser. */
 function setupIntakeDialog() {
+  if (hasCompletedIntake()) return;
+
   const dialog = elements.intakeDialog;
+  const card = dialog.querySelector('.dispatch__card');
+  const input = dialog.querySelector('#intake-andrew-username');
+  let unlocked = false;
+
+  function refuseDismissal() {
+    card.animate(
+      [{ transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }],
+      { duration: 190 },
+    );
+    input.focus();
+  }
 
   wireEmailForm(document.querySelector('#intake-email-form'), {
-    onSuccess: () => window.setTimeout(() => dialog.close(), 1400),
+    onSuccess: () => {
+      rememberIntake();
+      window.setTimeout(() => {
+        unlocked = true;
+        dialog.close();
+      }, 1400);
+    },
   });
 
-  elements.intakeClose.addEventListener('click', () => dialog.close());
+  /* Blocks Escape and any other browser-initiated cancel. */
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    refuseDismissal();
+  });
+
+  /* Clicks on the backdrop land on the dialog element itself. */
   dialog.addEventListener('click', (event) => {
-    if (event.target === dialog) dialog.close();
+    if (event.target === dialog) refuseDismissal();
+  });
+
+  /* Last resort: if anything else closes the dialog, reopen it. */
+  dialog.addEventListener('close', () => {
+    if (!unlocked) dialog.showModal();
   });
 
   dialog.showModal();
+  window.setTimeout(() => input.focus(), 0);
 }
 
 wireEmailForm(document.querySelector('#andrew-email-form'));
