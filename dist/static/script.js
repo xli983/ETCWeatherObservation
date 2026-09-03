@@ -2,13 +2,17 @@
    COUNTDOWN CONFIGURATION — SET THE TARGET DATE HERE
    ================================================================ */
 const COUNTDOWN_CONFIG = {
+  targetDate: '2026-09-07T10:00:00-04:00',
   locale: 'zh-CN',
   packetId: '0005',
-  signalTime: ['19', '15', '19'],
 };
 
 const ANDREW_DOMAIN = '@andrew.cmu.edu';
 const ALLOWED_USERNAME = /^[A-Za-z0-9._+-]+$/;
+const INTAKE_STORAGE_KEY = 'etc-intake-submitted';
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+const HOUR = 60 * MINUTE;
 
 const elements = {
   body: document.body,
@@ -21,16 +25,15 @@ const elements = {
   packetId: document.querySelector('#packet-id'),
   checksum: document.querySelector('#checksum'),
   syncState: document.querySelector('#sync-state'),
-  countdownPanel: document.querySelector('.countdown-panel'),
-  signalFragment: document.querySelector('#signal-fragment'),
   intakeDialog: document.querySelector('#intake-dialog'),
-  intakeClose: document.querySelector('#intake-close'),
 };
 
 let previousValues = {};
 let announcedMinute = null;
-const GLITCH_GLYPHS = '01#%&/\\<>[]{}?!=+*ΞЖȜƵ';
-const glitchResets = new WeakMap();
+
+function pad(value, size = 2) {
+  return String(value).padStart(size, '0');
+}
 
 function formatDate(date, withTime = false) {
   return new Intl.DateTimeFormat(COUNTDOWN_CONFIG.locale, {
@@ -41,6 +44,12 @@ function formatDate(date, withTime = false) {
       ? { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }
       : {}),
   }).format(date).replaceAll('/', '.');
+}
+
+function formatOffset(date) {
+  const minutes = -date.getTimezoneOffset();
+  const sign = minutes >= 0 ? '+' : '-';
+  return `${sign}${pad(Math.floor(Math.abs(minutes) / 60))}:${pad(Math.abs(minutes) % 60)}`;
 }
 
 function makeChecksum(value) {
@@ -54,100 +63,52 @@ function makeChecksum(value) {
 }
 
 function updateStaticDetails() {
+  const target = new Date(COUNTDOWN_CONFIG.targetDate);
   const now = new Date();
-  const signalTime = COUNTDOWN_CONFIG.signalTime.join(':');
 
-  elements.targetDisplay.textContent = `SIGNAL LOCK / ${signalTime}`;
+  elements.targetDisplay.textContent = `${formatDate(target, true)} / UTC${formatOffset(target)}`;
   elements.issuedDate.textContent = formatDate(now);
   elements.packetId.textContent = COUNTDOWN_CONFIG.packetId;
-  elements.checksum.textContent = makeChecksum(signalTime);
+  elements.checksum.textContent = makeChecksum(COUNTDOWN_CONFIG.targetDate);
 }
 
 function renderValue(element, key, value) {
   if (previousValues[key] === value) return;
   previousValues[key] = value;
-  element.dataset.value = value;
-  element.classList.remove('is-ticking');
-  void element.offsetWidth;
   element.textContent = value;
-  element.classList.add('is-ticking');
-  window.setTimeout(() => element.classList.remove('is-ticking'), 120);
-}
-
-function corruptText(value, intensity = 0.5) {
-  return [...value]
-    .map((character) => {
-      if (character === ' ' || Math.random() > intensity) return character;
-      return GLITCH_GLYPHS[Math.floor(Math.random() * GLITCH_GLYPHS.length)];
-    })
-    .join('');
-}
-
-function corruptValue(element) {
-  const currentValue = element.dataset.value || element.textContent;
-  const previousReset = glitchResets.get(element);
-  if (previousReset) window.clearTimeout(previousReset);
-
-  const protectedIndex = Math.floor(Math.random() * currentValue.length);
-  const corruptedValue = [...currentValue]
-    .map((character, index) => index === protectedIndex ? character : corruptText(character, 1))
-    .join('');
-  element.dataset.corrupt = corruptedValue;
-  element.textContent = currentValue;
-  element.classList.add('is-corrupted');
-
-  const reset = window.setTimeout(() => {
-    element.textContent = element.dataset.value || currentValue;
-    element.dataset.corrupt = element.dataset.value || currentValue;
-    element.classList.remove('is-corrupted');
-  }, 90 + Math.random() * 170);
-  glitchResets.set(element, reset);
-}
-
-function scheduleSignalInterference() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  window.setTimeout(() => {
-    const values = [elements.hours, elements.minutes, elements.seconds];
-    const burstSize = Math.random() > 0.24 ? values.length : 2;
-    values.sort(() => Math.random() - 0.5).slice(0, burstSize).forEach(corruptValue);
-
-    elements.countdownPanel.classList.add('is-interfering');
-    elements.signalFragment.textContent = Math.random() > 0.48
-      ? `// ${corruptText('SIGNAL_UNSTABLE', 0.36)}`
-      : `// ERR_${corruptText(makeChecksum(String(Date.now())).slice(0, 4), 0.58)}`;
-
-    window.setTimeout(() => {
-      elements.countdownPanel.classList.remove('is-interfering');
-      elements.signalFragment.textContent = '// SIGNAL_UNSTABLE';
-    }, 70 + Math.random() * 150);
-
-    scheduleSignalInterference();
-  }, 45 + Math.random() * 240);
 }
 
 function updateCountdown() {
-  const [hours, minutes, seconds] = COUNTDOWN_CONFIG.signalTime;
+  const targetTime = new Date(COUNTDOWN_CONFIG.targetDate).getTime();
+  const remaining = Math.max(0, targetTime - Date.now());
+  const expired = remaining <= 0;
+  const hours = Math.floor(remaining / HOUR);
+  const minutes = Math.floor((remaining % HOUR) / MINUTE);
+  const seconds = Math.floor((remaining % MINUTE) / SECOND);
 
-  renderValue(elements.hours, 'hours', hours);
-  renderValue(elements.minutes, 'minutes', minutes);
-  renderValue(elements.seconds, 'seconds', seconds);
+  renderValue(elements.hours, 'hours', pad(hours, Math.max(2, String(hours).length)));
+  renderValue(elements.minutes, 'minutes', pad(minutes));
+  renderValue(elements.seconds, 'seconds', pad(seconds));
 
-  elements.statusLabel.textContent = 'UNSTABLE';
-  elements.syncState.textContent = 'CORRUPTED';
-  elements.body.classList.remove('is-expired');
+  elements.statusLabel.textContent = expired ? 'COMPLETE' : 'ACTIVE';
+  elements.syncState.textContent = expired ? 'TERMINAL' : 'NOMINAL';
+  elements.body.classList.toggle('is-expired', expired);
 
-  if (announcedMinute !== minutes) {
-    announcedMinute = minutes;
+  const currentMinute = Math.ceil(remaining / MINUTE);
+  if (announcedMinute !== currentMinute) {
+    announcedMinute = currentMinute;
     elements.hours.closest('[role="timer"]').setAttribute(
       'aria-label',
-      `Corrupted signal displaying ${hours} hours, ${minutes} minutes and ${seconds} seconds`,
+      expired
+        ? 'Next update countdown complete'
+        : `${hours} hours, ${minutes} minutes and ${seconds} seconds remaining`,
     );
   }
 }
 
 function scheduleTick() {
   updateCountdown();
+  window.setTimeout(scheduleTick, SECOND - (Date.now() % SECOND) + 12);
 }
 
 function setFormStatus(status, message, type = '') {
@@ -254,26 +215,85 @@ function wireEmailForm(form, { onSuccess } = {}) {
   });
 }
 
-function setupIntakeDialog() {
-  const dialog = elements.intakeDialog;
+/* Private browsing and blocked-storage settings make localStorage throw on
+   access, so both sides are guarded: if storage is unusable the gate simply
+   reappears on the next visit. */
+function hasCompletedIntake() {
+  try {
+    return window.localStorage.getItem(INTAKE_STORAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
 
-  wireEmailForm(document.querySelector('#intake-email-form'), {
-    onSuccess: () => window.setTimeout(() => dialog.close(), 1400),
+function rememberIntake() {
+  try {
+    window.localStorage.setItem(INTAKE_STORAGE_KEY, 'true');
+  } catch {
+    /* Storage unavailable — nothing to remember, the gate shows again later. */
+  }
+}
+
+/* The intake dispatch is a hard gate on the first visit: it only closes once an
+   Andrew ID has been submitted successfully, so every dismissal route is
+   disabled. Once submitted, the visitor is never asked again on this browser. */
+function setupIntakeDialog() {
+  if (hasCompletedIntake()) return;
+
+  const dialog = elements.intakeDialog;
+  const card = dialog.querySelector('.dispatch__card');
+  const input = dialog.querySelector('#intake-andrew-username');
+  const status = dialog.querySelector('.email-form__status');
+  let unlocked = false;
+
+  /* Explains the refusal instead of only nudging the card, and keeps the focus
+     call from scrolling the blocked page underneath. */
+  function refuseDismissal() {
+    card.classList.remove('is-refused');
+    void card.offsetWidth;
+    card.classList.add('is-refused');
+    setFormStatus(status, 'An Andrew ID is required to continue.', 'error');
+    input.focus({ preventScroll: true });
+  }
+
+  card.addEventListener('animationend', (event) => {
+    if (event.animationName === 'dispatch-refuse') card.classList.remove('is-refused');
   });
 
-  elements.intakeClose.addEventListener('click', () => dialog.close());
+  wireEmailForm(document.querySelector('#intake-email-form'), {
+    onSuccess: () => {
+      rememberIntake();
+      window.setTimeout(() => {
+        unlocked = true;
+        dialog.close();
+      }, 1400);
+    },
+  });
+
+  /* Blocks Escape and any other browser-initiated cancel. */
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    refuseDismissal();
+  });
+
+  /* Clicks on the backdrop land on the dialog element itself. */
   dialog.addEventListener('click', (event) => {
-    if (event.target === dialog) dialog.close();
+    if (event.target === dialog) refuseDismissal();
+  });
+
+  /* Last resort: if anything else closes the dialog, reopen it. */
+  dialog.addEventListener('close', () => {
+    if (!unlocked) dialog.showModal();
   });
 
   dialog.showModal();
+  window.setTimeout(() => input.focus({ preventScroll: true }), 0);
 }
 
 wireEmailForm(document.querySelector('#andrew-email-form'));
 setupIntakeDialog();
 updateStaticDetails();
 scheduleTick();
-scheduleSignalInterference();
 
 /* ================================================================
    OBSERVATION CONSOLE / VIEW ROUTING
