@@ -1,0 +1,494 @@
+/* PACKET_01 */
+
+position: absolute;
+left: 5.98%;
+right: 55.33%;
+top: 40.13%;
+bottom: 31.08%;
+
+
+
+/* P01_PAPER */
+
+position: absolute;
+left: 5.98%;
+right: 55.33%;
+top: 40.13%;
+bottom: 31.08%;
+
+background: #000000;
+
+
+/* P01_LINE_03 */
+
+position: absolute;
+left: 9.08%;
+right: 71.22%;
+top: 59.47%;
+bottom: 39.06%;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 33px;
+line-height: 40px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* P01_LINE_03 */
+
+position: absolute;
+left: 9.08%;
+right: 72.53%;
+top: 57.51%;
+bottom: 41.01%;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 33px;
+line-height: 40px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* P01_LINE_03 */
+
+position: absolute;
+left: 9.08%;
+right: 70.45%;
+top: 55.56%;
+bottom: 42.97%;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 33px;
+line-height: 40px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* P01_LINE_03 */
+
+position: absolute;
+left: 9.08%;
+right: 74.32%;
+top: 53.6%;
+bottom: 44.92%;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 33px;
+line-height: 40px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 5.98%;
+right: 55.33%;
+top: 40.13%;
+bottom: 31.08%;
+
+border: 2px solid #111111;
+
+
+/* P01_HEADER */
+
+position: absolute;
+left: 5.98%;
+right: 55.33%;
+top: 40.13%;
+bottom: 56.81%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 5.98%;
+right: 55.33%;
+top: 40.13%;
+bottom: 57.81%;
+
+background: #295CDB;
+
+
+/* ETC WEATHER OBSERVATION */
+
+position: absolute;
+left: 7.05%;
+right: 84.73%;
+top: 40.75%;
+bottom: 58.29%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 26px;
+/* identical to box height */
+
+color: #FFFFFF;
+
+
+
+/* ARCHIVE / 2008 */
+
+position: absolute;
+left: 39.85%;
+right: 56.4%;
+top: 40.94%;
+bottom: 58.32%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 15px;
+line-height: 20px;
+/* identical to box height */
+text-align: right;
+
+color: #FFFFFF;
+
+
+
+/* RECOVERED CONVERSATION */
+
+position: absolute;
+left: 7.05%;
+right: 87.44%;
+top: 42.52%;
+bottom: 56.81%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 700;
+font-size: 14px;
+line-height: 18px;
+
+color: #B30000;
+
+
+
+/* PACKET 0001 */
+
+position: absolute;
+left: 40.83%;
+right: 56.4%;
+top: 42.52%;
+bottom: 56.81%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 700;
+font-size: 14px;
+line-height: 18px;
+text-align: right;
+
+color: #B30000;
+
+
+
+/* P01_METADATA */
+
+position: absolute;
+left: 7.05%;
+right: 56.4%;
+top: 44.3%;
+bottom: 53.38%;
+
+
+
+/* DATE */
+
+position: absolute;
+left: 7.05%;
+right: 91.93%;
+top: 44.3%;
+bottom: 55.04%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 18px;
+
+color: #B30000;
+
+
+
+/* P01_DATE */
+
+position: absolute;
+left: 7.05%;
+right: 87.47%;
+top: 45.18%;
+bottom: 54.01%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 22px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* SOURCE */
+
+position: absolute;
+left: 15.09%;
+right: 83.39%;
+top: 44.3%;
+bottom: 55.04%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 18px;
+
+color: #B30000;
+
+
+
+/* P01_SOURCE */
+
+position: absolute;
+left: 15.09%;
+right: 81.88%;
+top: 45.18%;
+bottom: 54.01%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 22px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* STATE */
+
+position: absolute;
+left: 21.46%;
+right: 77.29%;
+top: 44.3%;
+bottom: 55.04%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 18px;
+
+color: #B30000;
+
+
+
+/* P01_STATE */
+
+position: absolute;
+left: 21.46%;
+right: 76.1%;
+top: 45.18%;
+bottom: 54.01%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 17px;
+line-height: 22px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 7.05%;
+right: 56.4%;
+top: 46.62%;
+bottom: 53.38%;
+
+border: 1px solid #FFFFFF;
+
+
+/* P01_DIALOGUE */
+
+position: absolute;
+left: 7.05%;
+right: 73.04%;
+top: 49.5%;
+bottom: 46.88%;
+
+
+
+/* MESSAGE 01 */
+
+position: absolute;
+left: 7.05%;
+right: 90.09%;
+top: 49.5%;
+bottom: 49.72%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 700;
+font-size: 16px;
+line-height: 21px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* P01_LINE_03 */
+
+position: absolute;
+left: 9.08%;
+right: 73.04%;
+top: 51.64%;
+bottom: 46.88%;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 700;
+font-size: 33px;
+line-height: 40px;
+/* identical to box height */
+
+color: #B30000;
+
+
+
+/* P01_OPTIONAL_GLASS_DIAGRAM */
+
+position: absolute;
+left: 32.77%;
+right: 57.53%;
+top: 47.8%;
+bottom: 36.32%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 32.77%;
+right: 57.53%;
+top: 47.8%;
+bottom: 36.32%;
+
+border: 1.5px dashed #FFFFFF;
+
+
+/* P01_FOOTER */
+
+position: absolute;
+left: 7.05%;
+right: 56.4%;
+top: 66.26%;
+bottom: 32.45%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 7.05%;
+right: 56.4%;
+top: 66.26%;
+bottom: 33.74%;
+
+border: 1px solid #FFFFFF;
+
+
+/* REPLY RECOVERED IN ANOTHER PACKET */
+
+position: absolute;
+left: 7.05%;
+right: 84.67%;
+top: 66.89%;
+bottom: 32.45%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 18px;
+
+color: #B30000;
+
+
+
+/* P01_CHECKSUM */
+
+position: absolute;
+left: 41.34%;
+right: 56.4%;
+top: 66.89%;
+bottom: 32.45%;
+
+font-family: 'IBM Plex Mono';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 18px;
+text-align: right;
+
+color: #B30000;
+
+
+
+/* 资源 2 3 */
+
+position: absolute;
+width: 246px;
+height: 242px;
+left: 1141px;
+top: 1329px;
+
+background: url(资源 2.png);
+
+
+/* 58°F */
+
+position: absolute;
+width: 145px;
+height: 77px;
+left: 1192px;
+top: 1614px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 64px;
+line-height: 77px;
+display: flex;
+align-items: center;
+text-align: center;
+
+color: #B30000;
+

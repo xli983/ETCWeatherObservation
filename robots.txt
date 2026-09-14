@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /aquarium
 
 Sitemap: https://etcweatherobservation.com/sitemap.xml
