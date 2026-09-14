@@ -527,20 +527,12 @@ function createRelatedRecord() {
   const related = document.createElement('aside');
   related.className = 'related-record';
 
-  const label = document.createElement('p');
-  label.className = 'related-record__label';
-  label.textContent = 'RELATED RECORD';
-
   const link = document.createElement('a');
   link.className = 'related-record__link';
   link.href = CONFIG.aquariumUrl;
   link.textContent = CONFIG.aquariumLabel;
 
-  const note = document.createElement('p');
-  note.className = 'related-record__note';
-  note.textContent = 'LOCATION REFERENCED IN THIS MESSAGE / STILL RESOLVING';
-
-  related.append(label, link, note);
+  related.append(link);
   return related;
 }
 
