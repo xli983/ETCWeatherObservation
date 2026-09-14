@@ -20,10 +20,6 @@ const STORAGE_KEYS = {
 
 const ANDREW_DOMAIN = '@andrew.cmu.edu';
 const ALLOWED_USERNAME = /^[A-Za-z0-9._+-]+$/;
-const SECOND = 1000;
-const MINUTE = 60 * SECOND;
-const HOUR = 60 * MINUTE;
-
 /* Private browsing and blocked-storage settings make localStorage throw on
    access, so every read and write is guarded: if storage is unusable the
    experience still runs, it just forgets progress between visits. */
@@ -183,28 +179,8 @@ const elements = {
   syncState: document.querySelector('#sync-state'),
 };
 
-let previousValues = {};
-let announcedMinute = null;
-
 function pad(value, size = 2) {
   return String(value).padStart(size, '0');
-}
-
-function formatDate(date, withTime = false) {
-  return new Intl.DateTimeFormat(CONFIG.locale, {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    ...(withTime
-      ? { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }
-      : {}),
-  }).format(date).replaceAll('/', '.');
-}
-
-function formatOffset(date) {
-  const minutes = -date.getTimezoneOffset();
-  const sign = minutes >= 0 ? '+' : '-';
-  return `${sign}${pad(Math.floor(Math.abs(minutes) / 60))}:${pad(Math.abs(minutes) % 60)}`;
 }
 
 function makeChecksum(value) {
@@ -218,55 +194,19 @@ function makeChecksum(value) {
 }
 
 function updateStaticDetails() {
-  const target = new Date(CONFIG.targetDate);
-
-  elements.targetDisplay.textContent = `${formatDate(target, true)} / UTC${formatOffset(target)}`;
+  elements.hours.textContent = '00';
+  elements.minutes.textContent = '00';
+  elements.seconds.textContent = '00';
+  elements.targetDisplay.textContent = 'NOT SCHEDULED';
+  elements.statusLabel.textContent = 'SUSPENDED';
   elements.issuedDate.textContent = CONFIG.latestIssued;
   elements.packetId.textContent = CONFIG.latestPacket;
-  elements.checksum.textContent = makeChecksum(CONFIG.targetDate);
-}
-
-function renderValue(element, key, value) {
-  if (previousValues[key] === value) return;
-  previousValues[key] = value;
-  element.textContent = value;
-}
-
-function updateCountdown() {
-  const targetTime = new Date(CONFIG.targetDate).getTime();
-  const remaining = Math.max(0, targetTime - Date.now());
-  const expired = remaining <= 0;
-  const hours = Math.floor(remaining / HOUR);
-  const minutes = Math.floor((remaining % HOUR) / MINUTE);
-  const seconds = Math.floor((remaining % MINUTE) / SECOND);
-
-  renderValue(elements.hours, 'hours', pad(hours, Math.max(2, String(hours).length)));
-  renderValue(elements.minutes, 'minutes', pad(minutes));
-  renderValue(elements.seconds, 'seconds', pad(seconds));
-
-  elements.statusLabel.textContent = expired ? 'COMPLETE' : 'ACTIVE';
-  elements.syncState.textContent = expired ? 'TERMINAL' : 'NOMINAL';
-  elements.body.classList.toggle('is-expired', expired);
-
-  const currentMinute = Math.ceil(remaining / MINUTE);
-  if (announcedMinute !== currentMinute) {
-    announcedMinute = currentMinute;
-    elements.hours.closest('[role="timer"]').setAttribute(
-      'aria-label',
-      expired
-        ? 'Next update countdown complete'
-        : `${hours} hours, ${minutes} minutes and ${seconds} seconds remaining`,
-    );
-  }
-}
-
-function scheduleTick() {
-  updateCountdown();
-  window.setTimeout(scheduleTick, SECOND - (Date.now() % SECOND) + 12);
+  elements.checksum.textContent = makeChecksum(`SUSPENDED:${CONFIG.targetDate}`);
+  elements.syncState.textContent = 'HALTED';
+  elements.hours.closest('.timer').setAttribute('aria-label', 'Next update bulletin suspended');
 }
 
 updateStaticDetails();
-scheduleTick();
 
 /* ================================================================
    ANDREW ID / AFFILIATION
@@ -399,7 +339,7 @@ if (savedAndrewId) showAffiliation(savedAndrewId);
 /* ================================================================
    VIEW ROUTING
    ================================================================ */
-const ROUTES = ['current', 'archive', 'system-log', 'about'];
+const ROUTES = ['current', 'archive', 'about'];
 const navItems = [...document.querySelectorAll('[data-route]')];
 const views = [...document.querySelectorAll('[data-view]')];
 
@@ -611,8 +551,15 @@ function openPacket(packet) {
   const pages = [];
 
   if (packet.record) {
-    pages.push(createRecoveredSheet(packet));
-    if (packet.record.relatedRecord) pages.push(createRelatedRecord());
+    const recovered = createRecoveredSheet(packet);
+    if (packet.record.relatedRecord) {
+      const packetStack = document.createElement('div');
+      packetStack.className = 'packet-record-stack';
+      packetStack.append(recovered, createRelatedRecord());
+      pages.push(packetStack);
+    } else {
+      pages.push(recovered);
+    }
   } else {
     packet.pages.forEach((source, index) => {
       const figure = document.createElement('figure');

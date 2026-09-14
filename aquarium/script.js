@@ -102,7 +102,9 @@ const QUESTIONS = [
   { id: 'alone', type: 'choice', text: 'Are you visiting alone?', options: ['YES', 'NO'] },
   { id: 'recognize', type: 'choice', text: 'Do you usually recognize yourself immediately when you look into a mirror?', options: ['ALWAYS', 'USUALLY', 'SOMETIMES', 'RARELY'] },
   { id: 'unfamiliar', type: 'choice', text: 'Have you ever felt that your reflection looked unfamiliar to you?', options: ['YES', 'NO', "I'M NOT SURE"] },
+  { id: 'heartSide', type: 'choice', text: 'Is your heart on the right side of your body?', options: ['YES', 'NO', "I'M NOT SURE"] },
   { id: 'unexpected', type: 'choice', text: 'Have you ever noticed your reflection doing something you did not expect?', options: ['YES', 'NO', "I'M NOT SURE"] },
+  { id: 'clockDirection', type: 'choice', text: 'Is this clock moving clockwise or counterclockwise?', image: '../assets/clock.gif', imageAlt: 'An animated clock face', options: ['CLOCKWISE', 'COUNTERCLOCKWISE', "I'M NOT SURE"] },
   { id: 'someoneElse', type: 'choice', text: 'Have you ever seen someone in a mirror who you believed was not yourself?', options: ['YES', 'NO', "I'M NOT SURE"] },
   { id: 'double', type: 'choice', text: 'Do you believe there is another person who is exactly like you somewhere in the world?', options: ['YES', 'NO', "I DON'T KNOW"] },
   { id: 'identical', type: 'choice', text: 'If you met someone identical to you, would you consider them to be you?', options: ['YES', 'NO', 'IT DEPENDS'] },
@@ -148,6 +150,16 @@ function renderQuestion() {
   text.textContent = question.text;
 
   const nodes = [text];
+
+  if (question.image) {
+    const media = document.createElement('figure');
+    media.className = 'question__media';
+    const image = document.createElement('img');
+    image.src = question.image;
+    image.alt = question.imageAlt ?? '';
+    media.append(image);
+    nodes.push(media);
+  }
 
   if (question.type === 'choice') {
     const list = document.createElement('div');

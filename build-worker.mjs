@@ -26,6 +26,7 @@ const staticAssets = [
   'icon_white.ico',
   'fish_black.png',
   'og.png',
+  'assets/clock.gif',
   ...packetImages,
 ];
 
@@ -57,6 +58,7 @@ const binaryAssets = {
   '/icon_white.ico': ['icon_white.ico', 'image/x-icon'],
   '/fish_black.png': ['fish_black.png', 'image/png'],
   '/og.png': ['og.png', 'image/png'],
+  '/assets/clock.gif': ['assets/clock.gif', 'image/gif'],
   ...Object.fromEntries(packetImages.map((file) => [`/${file}`, [file, 'image/png']])),
 };
 

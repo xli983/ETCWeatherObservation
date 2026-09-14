@@ -441,6 +441,21 @@ body {
   line-height: 1.35;
 }
 
+.question__media {
+  width: min(100%, 390px);
+  margin: -0.45rem auto 1.4rem;
+  border: 2px inset #b9b6a4;
+  background: #bb1717;
+}
+
+.question__media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(34vh, 285px);
+  object-fit: contain;
+}
+
 .option-list {
   display: grid;
   gap: 8px;

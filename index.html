@@ -60,11 +60,8 @@
         <button class="site-nav__item" data-route="archive" data-label="ARCHIVE" type="button">
           <span class="nav-index">02</span><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-label">ARCHIVE</span><span class="nav-arrow">↗</span>
         </button>
-        <button class="site-nav__item" data-route="system-log" data-label="SYSTEM LOG" type="button">
-          <span class="nav-index">03</span><span class="nav-icon" aria-hidden="true">_</span><span class="nav-label">SYSTEM LOG</span><span class="nav-arrow">↗</span>
-        </button>
         <button class="site-nav__item" data-route="about" data-label="ABOUT" type="button">
-          <span class="nav-index">04</span><span class="nav-icon" aria-hidden="true">i</span><span class="nav-label">ABOUT</span><span class="nav-arrow">↗</span>
+          <span class="nav-index">03</span><span class="nav-icon" aria-hidden="true">i</span><span class="nav-label">ABOUT</span><span class="nav-arrow">↗</span>
         </button>
       </nav>
       <div class="site-nav__footer">
@@ -94,14 +91,14 @@
         <div class="metadata" aria-label="Countdown metadata">
           <p>STATION: <strong>LOCAL</strong></p>
           <p>PACKET: <strong id="packet-id">0008</strong></p>
-          <p>ISSUED: <strong id="issued-date">--/--/----</strong></p>
-          <p>STATUS: <strong id="status-label">ACTIVE</strong></p>
+          <p>ISSUED: <strong id="issued-date">09/16/2026</strong></p>
+          <p>STATUS: <strong id="status-label">SUSPENDED</strong></p>
         </div>
 
-        <section class="countdown-panel" aria-label="Countdown timer">
+        <section class="countdown-panel" aria-label="Suspended bulletin status">
           <p class="target-kicker">NEXT UPDATE IN</p>
 
-          <div class="timer" role="timer" aria-live="off">
+          <div class="timer" aria-label="Next update bulletin suspended">
             <div class="time-unit time-unit--hours">
               <span class="time-value" id="hours">00</span>
               <span class="unit-label">HOURS</span>
@@ -118,12 +115,18 @@
 
           <div class="target-line" aria-label="Target date">
             <span class="target-line__label">TARGET</span>
-            <span class="target-line__value" id="target-display">--</span>
+            <span class="target-line__value" id="target-display">NOT SCHEDULED</span>
           </div>
         </section>
 
+        <a class="bulletin-alert" href="#archive">
+          <span class="bulletin-alert__status">EMERGENCY NOTICE</span>
+          <span class="bulletin-alert__message">BULLETIN SERVICE HAS BEEN SUSPENDED DUE TO AN EMERGENCY.</span>
+          <span class="bulletin-alert__action">FOR AVAILABLE INFORMATION, PROCEED TO THE ARCHIVE AND REVIEW PREVIOUS PACKETS. <b>OPEN ARCHIVE&nbsp;↗</b></span>
+        </a>
+
         <footer class="footer-line">
-          <p>DATA FEED: LOCAL / SYNC: <span id="sync-state">NOMINAL</span></p>
+          <p>DATA FEED: LOCAL / SYNC: <span id="sync-state">HALTED</span></p>
           <p>CHK: <span id="checksum">0000-0000</span></p>
         </footer>
       </section>
@@ -133,19 +136,6 @@
         <div class="rule rule--heavy"></div>
         <nav class="archive-list" id="archive-list" aria-label="Weather packet archive"></nav>
         <p class="archive-note" id="archive-note">TWO RECORDS WITHHELD / OPERATOR ACCESS REQUIRED</p>
-      </section>
-
-      <section class="view console-view" data-view="system-log" aria-labelledby="log-title">
-        <header class="view-head"><p class="eyebrow">DIAGNOSTICS / READ ONLY</p><h1 id="log-title">SYSTEM LOG</h1><p class="view-code">TAIL -F /VAR/ETC/FEED.LOG</p></header>
-        <div class="rule rule--heavy"></div>
-        <div class="terminal-window">
-          <div class="terminal-bar"><span>ETC::LOCAL_FEED</span><span>SESSION 04A7</span></div>
-          <div class="terminal-output" id="terminal-output" aria-live="polite">
-            <p><time>09/16 07:04</time><b>PACKET</b><span>0008 GENERATED</span></p><p><time>09/16 07:03</time><b>LANGUAGE</b><span>MATCH UNRESOLVED</span></p><p><time>09/16 07:02</time><b>RETURN</b><span>INBOUND TRANSMISSION ACCEPTED</span></p><p><time>09/16 07:01</time><b>SOURCE</b><span>UNRESOLVED</span></p><p><time>09/07 09:15</time><b>PACKET</b><span>0007 GENERATED</span></p><p><time>09/07 09:15</time><b>CHECKSUM</b><span>VERIFIED</span></p><p><time>09/03 09:15</time><b>PACKET</b><span>0006 GENERATED</span></p><p><time>09/03 09:14</time><b>WEATHER</b><span>DATA UPDATED</span></p><p><time>08/30 09:17</time><b>PACKET</b><span>0005 GENERATED</span></p><p><time>08/30 09:17</time><b>CHECKSUM</b><span>VERIFIED</span></p><p><time>08/27 09:15</time><b>PACKET</b><span>0004 GENERATED</span></p><p><time>08/24 09:15</time><b>PACKET</b><span>0003 GENERATED</span></p><p><time>08/24 09:12</time><b>LINK</b><span>LOCAL FEED CONNECTED</span></p><p><time>08/24 09:11</time><b>ARCHIVE</b><span>02 RECORDS WITHHELD</span></p>
-            <div class="terminal-prompt"><span>operator@etc-observation:~$</span><i></i></div>
-          </div>
-          <footer><span>14 RECORDS</span><span>NO ERRORS DETECTED</span><span>FEED: NOMINAL</span></footer>
-        </div>
       </section>
 
       <section class="view console-view about-view" data-view="about" aria-labelledby="about-title">
@@ -250,7 +240,7 @@
           <p class="eyebrow" id="signal-title">INCOMING / SOURCE UNRESOLVED</p>
           <button class="signal__dismiss" id="signal-dismiss" type="button" aria-label="Connection active" disabled>
             <span class="signal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="signal__close" aria-hidden="true">✕</span>
+            <span class="signal__close" aria-hidden="true">×</span>
           </button>
         </header>
         <div class="rule rule--heavy" aria-hidden="true"></div>
