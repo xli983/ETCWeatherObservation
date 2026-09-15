@@ -1338,23 +1338,26 @@ button {
   .sheet { padding-left: var(--rail-width); transition: padding-left 440ms cubic-bezier(.18,.78,.2,1); }
 }
 
+/* On a phone the rail cannot expand on hover, so the sections are named
+   outright instead of hiding behind glyphs. */
 @media (max-width: 820px) {
   .site-nav { height: 66px; padding: 0 .75rem; border-bottom: 1px solid rgba(17,18,16,.25); box-shadow: 0 8px 30px rgba(17,18,16,.08); }
-  .nav-scan,.site-nav__hint,.site-nav__footer,.nav-index,.nav-label,.nav-arrow { display: none; }
+  .nav-scan,.site-nav__hint,.site-nav__footer,.nav-index,.nav-icon,.nav-arrow { display: none; }
   .site-nav__identity { flex: 0 0 auto; }
-  .site-nav nav { gap: .25rem; }
-  .site-nav__item { display: grid; width: 42px; height: 42px; padding: 0; place-items: center; border: 0; }
-  .nav-icon { display: grid!important; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(17,18,16,.2); font-family: var(--sans); font-size: .85rem; }
-  .site-nav__item.is-active .nav-icon { color: var(--paper); background: var(--ink); }
+  .site-nav nav { gap: .3rem; }
+  .site-nav__item { display: flex; width: auto; height: 42px; padding: 0 .8rem; align-items: center; justify-content: center; border: 1px solid rgba(17,18,16,.22); }
+  .site-nav__item .nav-label { display: block; padding: 0; opacity: 1; color: var(--ink); font-size: .68rem; letter-spacing: .1em; white-space: nowrap; transform: none; }
+  .site-nav__item.is-active { color: var(--paper); background: var(--ink); }
+  .site-nav__item.is-active .nav-label { color: var(--paper); }
   .sheet { padding-top: 66px; }
 }
 
 @media (max-width: 460px) {
-  .site-nav { padding: 0 .45rem; }
-  .site-nav__mark { width: 32px; height: 36px; }
-  .site-nav__mark img { width: 30px; height: 33px; }
-  .site-nav__mark b { font-size: .34rem; }
-  .site-nav nav { gap: .05rem; }
-  .site-nav__item { width: 36px; }
-  .nav-icon { width: 30px; height: 30px; font-size: .75rem; }
+  .site-nav { padding: 0 .4rem; }
+  .site-nav__mark { width: 30px; height: 34px; margin-right: .1rem; }
+  .site-nav__mark img { width: 28px; height: 31px; }
+  .site-nav__mark b { font-size: .32rem; }
+  .site-nav nav { gap: .25rem; }
+  .site-nav__item { height: 40px; padding: 0 .5rem; }
+  .site-nav__item .nav-label { font-size: .62rem; letter-spacing: .07em; }
 }
