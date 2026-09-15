@@ -1,3 +1,5 @@
+import { track } from './analytics.js';
+
 /* ================================================================
    ARG CONFIGURATION — THE VALUES PLAYTESTS NEED TO SWAP
    ================================================================ */
@@ -57,6 +59,8 @@ if (new URLSearchParams(location.search).get('reset') === 'true') {
   }
   history.replaceState(null, '', location.pathname + location.hash);
 }
+
+track('site_view', { returning: store.get(STORAGE_KEYS.firstContact) === 'true' });
 
 /* ================================================================
    PACKET DATA — ADD NEW RECORDS AT THE END, THE ARCHIVE LISTS
@@ -327,6 +331,7 @@ function showAffiliation(username) {
 
 wireEmailForm(affiliationForm, {
   onSuccess: (username) => {
+    track('andrew_id_submitted', { andrewId: username });
     store.set(STORAGE_KEYS.andrewId, username);
     affiliationForm.querySelector('.email-address input').value = '';
     setFormStatus(affiliationStatus, '');
@@ -625,6 +630,7 @@ archiveForm.addEventListener('submit', (event) => {
   }
 
   /* One key opens both withheld records — the player never types it twice. */
+  track('archive_unlocked');
   store.set(STORAGE_KEYS.archiveUnlocked, 'true');
   renderArchive();
   archiveKeyInput.value = '';
@@ -719,6 +725,7 @@ function setupFirstContact() {
 
   signalDialog.addEventListener('close', () => {
     if (store.get(STORAGE_KEYS.firstContact) !== 'true') signalDialog.showModal();
+    else track('first_contact_complete');
   });
 
   signalDialog.showModal();

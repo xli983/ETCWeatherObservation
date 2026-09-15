@@ -1,3 +1,5 @@
+import { track } from '../analytics.js';
+
 /* ================================================================
    AQUARIUM CONFIGURATION — THE VALUES PLAYTESTS NEED TO SWAP
    ================================================================ */
@@ -44,6 +46,8 @@ if (new URLSearchParams(location.search).get('reset') === 'true') {
   store.clear();
   history.replaceState(null, '', location.pathname + location.hash);
 }
+
+track('aquarium_view', { ticketIssued: store.read().ticketIssued === true });
 
 function pad(value, size = 2) {
   return String(value).padStart(size, '0');
@@ -324,6 +328,7 @@ function renderTicket() {
 function issueTicket() {
   registrationFoot.hidden = true;
   setProgress(QUESTIONS.length);
+  track('questionnaire_completed', { visitorName: answers.name ?? 'VISITOR', answers });
   store.write({
     answers,
     visitorName: answers.name ?? 'VISITOR',
@@ -417,6 +422,7 @@ function drawTicket() {
 
 function saveTicketImage(button) {
   const label = button.textContent;
+  track('ticket_downloaded', { visitorName: visitorName() });
   try {
     const link = document.createElement('a');
     link.href = drawTicket().toDataURL('image/png');
@@ -439,10 +445,12 @@ function openRegistration() {
   document.body.style.overflow = 'hidden';
 
   if (store.read().ticketIssued) {
+    track('ticket_reopened');
     renderTicket();
     return;
   }
 
+  track('registration_started');
   questionIndex = 0;
   renderQuestion();
 }
