@@ -32,40 +32,40 @@ var EVENT_HEADERS = [
 
 /* Event name -> the label shown on the dashboard, in funnel order. */
 var FUNNEL = [
-  ['site_view', '打开网站 / OPENED SITE'],
-  ['first_contact_complete', '看完开场通信 / SAW FIRST CONTACT'],
-  ['andrew_id_submitted', '提交 Andrew ID / SUBMITTED ANDREW ID'],
-  ['archive_unlocked', '解锁档案 / UNLOCKED ARCHIVE'],
-  ['aquarium_view', '进入 Aquarium / REACHED AQUARIUM'],
-  ['registration_started', '开始问卷 / STARTED QUESTIONNAIRE'],
-  ['questionnaire_completed', '完成问卷 / FINISHED QUESTIONNAIRE'],
-  ['ticket_downloaded', '下载票 / DOWNLOADED TICKET'],
+  ['site_view', '???? / OPENED SITE'],
+  ['first_contact_complete', '?????? / SAW FIRST CONTACT'],
+  ['andrew_id_submitted', '?? Andrew ID / SUBMITTED ANDREW ID'],
+  ['archive_unlocked', '???? / UNLOCKED ARCHIVE'],
+  ['aquarium_view', '?? Aquarium / REACHED AQUARIUM'],
+  ['registration_started', '???? / STARTED QUESTIONNAIRE'],
+  ['questionnaire_completed', '???? / FINISHED QUESTIONNAIRE'],
+  ['ticket_downloaded', '??? / DOWNLOADED TICKET'],
 ];
 
 /* The questionnaire, mirrored from src/aquarium/script.js. Only the
    multiple-choice questions: the ANSWERS tab draws one pie per question.
    If a question changes there, change it here and rerun setUpSheets(). */
 var CHOICE_QUESTIONS = [
-  ['visitedBefore', '来过这座水族馆吗 / VISITED BEFORE', ['YES', 'NO', "I'M NOT SURE"]],
-  ['alone', '独自前来吗 / VISITING ALONE', ['YES', 'NO']],
-  ['recognize', '照镜子能立刻认出自己吗 / RECOGNIZES SELF', ['ALWAYS', 'USUALLY', 'SOMETIMES', 'RARELY']],
-  ['unfamiliar', '觉得倒影陌生过吗 / REFLECTION UNFAMILIAR', ['YES', 'NO', "I'M NOT SURE"]],
-  ['heartSide', '心脏长在右边吗 / HEART ON THE RIGHT', ['YES', 'NO', "I'M NOT SURE"]],
-  ['unexpected', '倒影做过意料之外的动作吗 / REFLECTION UNEXPECTED', ['YES', 'NO', "I'M NOT SURE"]],
-  ['clockDirection', '钟表朝哪个方向走 / CLOCK DIRECTION', ['CLOCKWISE', 'COUNTERCLOCKWISE', "I'M NOT SURE"]],
-  ['someoneElse', '在镜子里见过别人吗 / SAW SOMEONE ELSE', ['YES', 'NO', "I'M NOT SURE"]],
-  ['double', '相信世上有另一个你吗 / BELIEVES IN A DOUBLE', ['YES', 'NO', "I DON'T KNOW"]],
-  ['identical', '会认为那个人就是你吗 / WOULD COUNT AS YOU', ['YES', 'NO', 'IT DEPENDS']],
-  ['consent', '同意保留访客记录吗 / CONSENTED', ['YES', 'NO']],
+  ['visitedBefore', '???????? / VISITED BEFORE', ['YES', 'NO', "I'M NOT SURE"]],
+  ['alone', '????? / VISITING ALONE', ['YES', 'NO']],
+  ['recognize', '??????????? / RECOGNIZES SELF', ['ALWAYS', 'USUALLY', 'SOMETIMES', 'RARELY']],
+  ['unfamiliar', '???????? / REFLECTION UNFAMILIAR', ['YES', 'NO', "I'M NOT SURE"]],
+  ['heartSide', '??????? / HEART ON THE RIGHT', ['YES', 'NO', "I'M NOT SURE"]],
+  ['unexpected', '???????????? / REFLECTION UNEXPECTED', ['YES', 'NO', "I'M NOT SURE"]],
+  ['clockDirection', '???????? / CLOCK DIRECTION', ['CLOCKWISE', 'COUNTERCLOCKWISE', "I'M NOT SURE"]],
+  ['someoneElse', '????????? / SAW SOMEONE ELSE', ['YES', 'NO', "I'M NOT SURE"]],
+  ['double', '?????????? / BELIEVES IN A DOUBLE', ['YES', 'NO', "I DON'T KNOW"]],
+  ['identical', '?????????? / WOULD COUNT AS YOU', ['YES', 'NO', 'IT DEPENDS']],
+  ['consent', '????????? / CONSENTED', ['YES', 'NO']],
 ];
 
 /* Label, lower bound, upper bound. The bounds are COUNTIFS criteria. */
 var AGE_BUCKETS = [
-  ['17 及以下', '">=0"', '"<=17"'],
+  ['17 ???', '">=0"', '"<=17"'],
   ['18-22', '">=18"', '"<=22"'],
   ['23-26', '">=23"', '"<=26"'],
   ['27-30', '">=27"', '"<=30"'],
-  ['31 及以上', '">=31"', '"<=200"'],
+  ['31 ???', '">=31"', '"<=200"'],
 ];
 
 var INK = '#1a1a1a';
@@ -195,6 +195,12 @@ function setUpSheets() {
   var legacy = book.getSheetByName('SUMMARY');
   if (legacy) book.deleteSheet(legacy);
 
+  /* The empty tab Google creates with every new spreadsheet. */
+  ['Sheet1', 'Sheet 1', '\u5de5\u4f5c\u88681'].forEach(function (name) {
+    var blank = book.getSheetByName(name);
+    if (blank && blank.getLastRow() === 0) book.deleteSheet(blank);
+  });
+
   buildDashboard(book);
   buildAnswers(book);
   tidyRawTabs(book);
@@ -222,21 +228,21 @@ function clearCollectedData() {
 function buildDashboard(book) {
   var view = reset(book, 'DASHBOARD', 0);
 
-  title(view, 1, 'ETC ARG / PLAYTEST 数据面板');
-  note(view, 2, '所有数字都是公式，有人来就自动更新。原始数据在 EVENTS / ANDREW IDS / QUESTIONNAIRE 三个标签页。');
-  view.getRange(3, 1).setValue('最后一次事件 / LAST EVENT').setFontColor(MUTED);
+  title(view, 1, 'ETC ARG / PLAYTEST ????');
+  note(view, 2, '??????????????????????? EVENTS / ANDREW IDS / QUESTIONNAIRE ??????');
+  view.getRange(3, 1).setValue('?????? / LAST EVENT').setFontColor(MUTED);
   view.getRange(3, 2).setFormula('=IFERROR(TEXT(MAX(EVENTS!$A$2:$A), "yyyy-mm-dd hh:mm"), "-")');
 
   /* --- Headline numbers --- */
-  section(view, 5, '核心指标 / HEADLINE NUMBERS');
+  section(view, 5, '???? / HEADLINE NUMBERS');
 
   var kpis = [
-    ['独立访客', uniqueVisitors('site_view')],
-    ['提交 Andrew ID', "=COUNTUNIQUE('ANDREW IDS'!$B$2:$B)"],
-    ['进入 Aquarium', uniqueVisitors('aquarium_view')],
-    ['完成问卷', uniqueVisitors('questionnaire_completed')],
-    ['下载票', uniqueVisitors('ticket_downloaded')],
-    ['总事件数', '=COUNTA(EVENTS!$B$2:$B)'],
+    ['????', uniqueVisitors('site_view')],
+    ['?? Andrew ID', "=COUNTUNIQUE('ANDREW IDS'!$B$2:$B)"],
+    ['?? Aquarium', uniqueVisitors('aquarium_view')],
+    ['????', uniqueVisitors('questionnaire_completed')],
+    ['???', uniqueVisitors('ticket_downloaded')],
+    ['????', '=COUNTA(EVENTS!$B$2:$B)'],
   ];
   kpis.forEach(function (kpi, i) {
     view.getRange(6, i + 1).setValue(kpi[0]).setFontColor(MUTED).setFontSize(9);
@@ -244,7 +250,7 @@ function buildDashboard(book) {
   });
 
   /* Second line reads each headline as a share of everyone who showed up. */
-  view.getRange(8, 1).setValue('基准 / BASE').setFontColor(MUTED).setFontSize(9);
+  view.getRange(8, 1).setValue('?? / BASE').setFontColor(MUTED).setFontSize(9);
   for (var col = 2; col <= 5; col++) {
     view.getRange(8, col)
       .setFormula('=IFERROR(' + columnLetter(col) + '7/$A$7, "-")')
@@ -254,8 +260,8 @@ function buildDashboard(book) {
   }
 
   /* --- Funnel --- */
-  section(view, 10, '转化漏斗 / FUNNEL');
-  header(view, 11, ['步骤', '人数', '次数', '占第一步', '比上一步']);
+  section(view, 10, '???? / FUNNEL');
+  header(view, 11, ['??', '??', '??', '????', '????']);
 
   FUNNEL.forEach(function (entry, i) {
     var row = 12 + i;
@@ -270,13 +276,13 @@ function buildDashboard(book) {
   /* Charts float above the grid, so each is anchored far enough down
      column G to clear the one before it. */
   chart(view, Charts.ChartType.BAR, view.getRange(11, 1, FUNNEL.length + 1, 2), 11, 7, 620, 300, {
-    title: '每一步还剩多少人 / FUNNEL',
+    title: '???????? / FUNNEL',
     legend: { position: 'none' },
   });
 
   /* --- By day --- */
-  section(view, 21, '每日活跃 / BY DAY');
-  header(view, 22, ['日期', '独立访客', '事件数', '下载票']);
+  section(view, 21, '???? / BY DAY');
+  header(view, 22, ['??', '????', '???', '???']);
 
   for (var i = 0; i < 30; i++) {
     var row = 23 + i;
@@ -299,29 +305,29 @@ function buildDashboard(book) {
   view.getRange(23, 1, 30, 1).setNumberFormat('mm-dd');
 
   chart(view, Charts.ChartType.LINE, view.getRange(22, 1, 31, 4), 28, 7, 620, 300, {
-    title: '每天的人和事件 / DAILY',
+    title: '??????? / DAILY',
     legend: { position: 'bottom' },
     pointSize: 4,
   });
 
   /* --- Device and language --- */
-  section(view, 54, '设备与语言 / DEVICE AND LANGUAGE');
-  header(view, 55, ['设备', '次数']);
-  view.getRange(56, 1).setValue('手机 / MOBILE');
+  section(view, 54, '????? / DEVICE AND LANGUAGE');
+  header(view, 55, ['??', '??']);
+  view.getRange(56, 1).setValue('?? / MOBILE');
   view.getRange(56, 2).setFormula('=COUNTIFS(EVENTS!$B$2:$B, "site_view", EVENTS!$L$2:$L, "*Mobi*")');
-  view.getRange(57, 1).setValue('电脑 / DESKTOP');
+  view.getRange(57, 1).setValue('?? / DESKTOP');
   view.getRange(57, 2).setFormula('=COUNTIF(EVENTS!$B$2:$B, "site_view")-$B$56');
 
-  header(view, 59, ['语言', '次数']);
-  view.getRange(60, 1).setValue('中文 / CHINESE');
+  header(view, 59, ['??', '??']);
+  view.getRange(60, 1).setValue('?? / CHINESE');
   view.getRange(60, 2).setFormula('=COUNTIFS(EVENTS!$B$2:$B, "site_view", EVENTS!$K$2:$K, "zh*")');
-  view.getRange(61, 1).setValue('英文 / ENGLISH');
+  view.getRange(61, 1).setValue('?? / ENGLISH');
   view.getRange(61, 2).setFormula('=COUNTIFS(EVENTS!$B$2:$B, "site_view", EVENTS!$K$2:$K, "en*")');
-  view.getRange(62, 1).setValue('其他 / OTHER');
+  view.getRange(62, 1).setValue('?? / OTHER');
   view.getRange(62, 2).setFormula('=COUNTIF(EVENTS!$B$2:$B, "site_view")-$B$60-$B$61');
 
-  chart(view, Charts.ChartType.PIE, view.getRange(55, 1, 3, 2), 45, 7, 300, 220, { title: '设备 / DEVICE' });
-  chart(view, Charts.ChartType.PIE, view.getRange(59, 1, 4, 2), 45, 12, 300, 220, { title: '语言 / LANGUAGE' });
+  chart(view, Charts.ChartType.PIE, view.getRange(55, 1, 3, 2), 54, 7, 300, 220, { title: '?? / DEVICE' });
+  chart(view, Charts.ChartType.PIE, view.getRange(59, 1, 4, 2), 54, 12, 300, 220, { title: '?? / LANGUAGE' });
 
   view.setColumnWidth(1, 300);
   view.setColumnWidths(2, 4, 120);
@@ -335,13 +341,13 @@ function buildDashboard(book) {
 function buildAnswers(book) {
   var view = reset(book, 'ANSWERS', 1);
 
-  title(view, 1, '问卷答案分布 / QUESTIONNAIRE');
-  note(view, 2, '只统计完成问卷的人。顺序和水族馆里的问卷一致，改了那边的选项就回来改 CHOICE_QUESTIONS，再跑一次 setUpSheets()。');
-  view.getRange(3, 1).setValue('完成问卷人数 / COMPLETED').setFontColor(MUTED);
+  title(view, 1, '?????? / QUESTIONNAIRE');
+  note(view, 2, '?????????????????????????????????? CHOICE_QUESTIONS????? setUpSheets()?');
+  view.getRange(3, 1).setValue('?????? / COMPLETED').setFontColor(MUTED);
   view.getRange(3, 2).setFormula('=COUNTA(QUESTIONNAIRE!$A$2:$A)');
 
-  section(view, 5, '年龄分布 / AGE');
-  header(view, 6, ['年龄段', '人数', '占比']);
+  section(view, 5, '???? / AGE');
+  header(view, 6, ['???', '??', '??']);
 
   var ageColumn = questionColumn('age');
   AGE_BUCKETS.forEach(function (bucket, i) {
@@ -353,7 +359,7 @@ function buildAnswers(book) {
   view.getRange(7, 3, AGE_BUCKETS.length, 1).setNumberFormat('0%');
 
   chart(view, Charts.ChartType.COLUMN, view.getRange(6, 1, AGE_BUCKETS.length + 1, 2), 5, 5, 380, 240, {
-    title: '年龄 / AGE',
+    title: '?? / AGE',
     legend: { position: 'none' },
   });
 
@@ -367,7 +373,7 @@ function buildAnswers(book) {
     var last = top + 1 + options.length;
 
     view.getRange(top, 1).setValue(label).setFontWeight('bold');
-    header(view, top + 1, ['选项', '人数', '占比']);
+    header(view, top + 1, ['??', '??', '??']);
 
     options.forEach(function (option, i) {
       var row = first + i;
